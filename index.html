@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Premier League Style Hub</title>
+    <!-- Tailwind CSS for modern styling -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <!-- Google Fonts for premium typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #0b0e14;
+        }
+        /* Custom scrollbar for premium feel */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #111827;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #374151;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body class="text-gray-100 min-h-screen">
+
+    <!-- Header Navigation -->
+    <nav class="border-b border-gray-800 bg-[#0f141c] sticky top-0 z-50 px-6 py-4">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <div class="flex items-center space-x-3">
+                <div class="bg-gradient-to-tr from-emerald-400 to-cyan-400 p-2 rounded-xl text-slate-950 font-bold text-xl tracking-wider">
+                    🏆
+                </div>
+                <span class="text-xl font-bold tracking-tight bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent">
+                    SOCCER<span class="text-emerald-400 font-medium text-lg ml-1">LEAGUE HUB</span>
+                </span>
+            </div>
+            <div class="text-xs bg-emerald-500/10 text-emerald-400 font-semibold px-3 py-1.5 rounded-full border border-emerald-500/20 uppercase tracking-widest">
+                Live Competition
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content Grid -->
+    <main class="max-w-7xl mx-auto px-4 py-8 lg:px-6 grid grid-cols-1 lg:grid-cols-3 gap-8">
+        
+        <!-- LEFT/CENTER: Standings Table -->
+        <div class="lg:col-span-2 space-y-6">
+            <div class="flex justify-between items-center">
+                <h2 class="text-xl font-bold text-white flex items-center gap-2">
+                    <span class="w-1 h-6 bg-emerald-400 rounded-full"></span> League Standings
+                </h2>
+                <span class="text-xs text-gray-400 font-mono">Live Standings</span>
+            </div>
+
+            <div class="bg-[#0f141c] border border-gray-800 rounded-2xl overflow-hidden shadow-xl">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="border-b border-gray-800 bg-[#141b26] text-xs font-semibold text-gray-400 uppercase tracking-wider">
+                                <th class="py-4 px-4 text-center w-12">Pos</th>
+                                <th class="py-4 px-4">Club</th>
+                                <th class="py-4 px-3 text-center">P</th>
+                                <th class="py-4 px-3 text-center">W</th>
+                                <th class="py-4 px-3 text-center">D</th>
+                                <th class="py-4 px-3 text-center">L</th>
+                                <th class="py-4 px-3 text-center font-medium text-gray-300">GD</th>
+                                <th class="py-4 px-4 text-center text-emerald-400 font-bold bg-emerald-500/5">Pts</th>
+                            </tr>
+                        </thead>
+                        <tbody id="standings-body" class="divide-y divide-gray-800/50 text-sm">
+                            <!-- Dynamic Content injected via JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- RIGHT: Match Center & Goal Scorers -->
+        <div class="space-y-8">
+            
+            <!-- Match Center Panel -->
+            <div>
+                <h2 class="text-xl font-bold text-white mb-6 flex items-center gap-2">
+                    <span class="w-1 h-6 bg-cyan-400 rounded-full"></span> Match Center
+                </h2>
+                <div class="bg-[#0f141c] border border-gray-800 rounded-2xl p-5 shadow-xl space-y-4 max-h-[450px] overflow-y-auto" id="fixtures-container">
+                    <!-- Dynamic Fixtures injected via JS -->
+                </div>
+            </div>
+
+            <!-- Golden Boot Tracker Panel -->
+            <div>
+                <h2 class="text-xl font-bold text-white mb-6 flex items-center gap-2">
+                    <span class="w-1 h-6 bg-amber-400 rounded-full"></span> Golden Boot
+                </h2>
+                <div class="bg-[#0f141c] border border-gray-800 rounded-2xl p-4 shadow-xl divide-y divide-gray-800/60">
+                    <div class="flex items-center justify-between py-3 first:pt-0 last:pb-0">
+                        <div class="flex items-center space-x-3">
+                            <span class="text-amber-400 font-bold text-sm bg-amber-400/10 w-6 h-6 rounded-full flex items-center justify-center">1</span>
+                            <div>
+                                <h4 class="font-semibold text-sm text-white">Top Scorer</h4>
+                                <p class="text-xs text-gray-400">Update in source if needed</p>
+                            </div>
+                        </div>
+                        <span class="text-sm font-bold bg-gray-800 px-2.5 py-1 rounded-md text-amber-400">0 Goals</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- JavaScript Engine Handling Calculations -->
+    <script>
+        // 1. Core Data: Your 6 updated teams
+        let teams = [
+            { id: "OFC", name: "Odha Fc", p: 0, w: 0, d: 0, l: 0, gf: 0, ga: 0, gd: 0, pts: 0 },
+            { id: "DNFC", name: "Deez Nuts Fc", p: 0, w: 0, d: 0, l: 0, gf: 0, ga: 0, gd: 0, pts: 0 },
+            { id: "AMAG", name: "Amaguruguru", p: 0, w: 0, d: 0, l: 0, gf: 0, ga: 0, gd: 0, pts: 0 },
+            { id: "GARW", name: "Golden Arrows", p: 0, w: 0, d: 0, l: 0, gf: 0, ga: 0, gd: 0, pts: 0 },
+            { id: "MPK", name: "MPK", p: 0, w: 0, d: 0, l: 0, gf: 0, ga: 0, gd: 0, pts: 0 },
+            { id: "GOLD", name: "Golden", p: 0, w: 0, d: 0, l: 0, gf: 0, ga: 0, gd: 0, pts: 0 }
+        ];
+
+        // 2. Sample Fixture List generated for your 6 teams
+        let fixtures = [
+            { id: 1, homeId: "OFC", awayId: "DNFC", homeScore: null, awayScore: null, isPlayed: false },
+            { id: 2, homeId: "AMAG", awayId: "GARW", homeScore: null, awayScore: null, isPlayed: false },
+            { id: 3, homeId: "MPK", awayId: "GOLD", homeScore: null, awayScore: null, isPlayed: false },
+            { id: 4, homeId: "DNFC", awayId: "AMAG", homeScore: null, awayScore: null, isPlayed: false },
+            { id: 5, homeId: "GARW", awayId: "MPK", homeScore: null, awayScore: null, isPlayed: false },
+            { id: 6, homeId: "GOLD", awayId: "OFC", homeScore: null, awayScore: null, isPlayed: false }
+        ];
+
+        function getTeam(id) {
+            return teams.find(t => t.id === id);
+        }
+
+        // 3. Main System Function: Recalculate Table Standings
+        function calculateLeague() {
+            teams.forEach(t => {
+                t.p = 0; t.w = 0; t.d = 0; t.l = 0; t.gf = 0; t.ga = 0; t.gd = 0; t.pts = 0;
+            });
+
+            fixtures.forEach(match => {
+                if (match.isPlayed) {
+                    let home = getTeam(match.homeId);
+                    let away = getTeam(match.awayId);
+
+                    home.p++;
+                    away.p++;
+                    home.gf += match.homeScore;
+                    home.ga += match.awayScore;
+                    away.gf += match.awayScore;
+                    away.ga += match.homeScore;
+
+                    if (match.homeScore > match.awayScore) {
+                        home.w++;
+                        home.pts += 3;
+                        away.l++;
+                    } else if (match.homeScore < match.awayScore) {
+                        away.w++;
+                        away.pts += 3;
+                        home.l++;
+                    } else {
+                        home.d++;
+                        away.d++;
+                        home.pts += 1;
+                        away.pts += 1;
+                    }
+                    home.gd = home.gf - home.ga;
+                    away.gd = away.gf - away.ga;
+                }
+            });
+
+            // Sorting Rules: Points -> Goal Difference -> Goals Scored
+            teams.sort((a, b) => {
+                if (b.pts !== a.pts) return b.pts - a.pts;
+                if (b.gd !== a.gd) return b.gd - a.gd;
+                return b.gf - a.gf;
+            });
+
+            renderTable();
+        }
+
+        // 4. Update individual match record
+        function saveMatchScore(matchId) {
+            const hInput = document.getElementById(`h-score-${matchId}`).value;
+            const aInput = document.getElementById(`a-score-${matchId}`).value;
+
+            if (hInput === "" || aInput === "") {
+                alert("Please enter scores for both sides!");
+                return;
+            }
+
+            let match = fixtures.find(f => f.id === matchId);
+            match.homeScore = parseInt(hInput);
+            match.awayScore = parseInt(aInput);
+            match.isPlayed = true;
+
+            calculateLeague();
+            renderFixtures();
+        }
+
+        // 5. Render HTML: Standings View Template
+        function renderTable() {
+            const tbody = document.getElementById('standings-body');
+            tbody.innerHTML = '';
+
+            teams.forEach((team, index) => {
+                const pos = index + 1;
+                const posClass = pos === 1 ? 'text-emerald-400 font-bold bg-emerald-500/10 rounded-lg p-1' : 'text-gray-400';
+                
+                tbody.innerHTML += `
+                    <tr class="hover:bg-gray-800/30 transition-colors">
+                        <td class="py-4 px-4 text-center font-mono"><span class="${posClass}">${pos}</span></td>
+                        <td class="py-4 px-4 font-semibold text-white">${team.name}</td>
+                        <td class="py-4 px-3 text-center font-mono">${team.p}</td>
+                        <td class="py-4 px-3 text-center text-gray-300 font-mono">${team.w}</td>
+                        <td class="py-4 px-3 text-center text-gray-300 font-mono">${team.d}</td>
+                        <td class="py-4 px-3 text-center text-gray-300 font-mono">${team.l}</td>
+                        <td class="py-4 px-3 text-center font-mono ${team.gd > 0 ? 'text-cyan-400' : team.gd < 0 ? 'text-rose-400' : 'text-gray-400'}">${team.gd > 0 ? '+' + team.gd : team.gd}</td>
+                        <td class="py-4 px-4 text-center text-emerald-400 font-bold font-mono bg-emerald-500/[0.02]">${team.pts}</td>
+                    </tr>
+                `;
+            });
+        }
+
+        // 6. Render HTML: Match Fixtures Panel
+        function renderFixtures() {
+            const container = document.getElementById('fixtures-container');
+            container.innerHTML = '';
+
+            fixtures.forEach(match => {
+                let home = getTeam(match.homeId);
+                let away = getTeam(match.awayId);
+
+                if (match.isPlayed) {
+                    container.innerHTML += `
+                        <div class="bg-[#141b26] border border-gray-800/60 p-3.5 rounded-xl flex items-center justify-between text-xs">
+                            <div class="flex-1 text-right font-medium text-gray-200 pr-2 truncate">${home.name}</div>
+                            <div class="bg-gray-900 px-3 py-1.5 rounded-lg font-mono font-bold text-sm tracking-wider text-cyan-400 border border-gray-800">
+                                ${match.homeScore} - ${match.awayScore}
+                            </div>
+                            <div class="flex-1 text-left font-medium text-gray-200 pl-2 truncate">${away.name}</div>
+                        </div>
+                    `;
+                } else {
+                    container.innerHTML += `
+                        <div class="bg-[#141b26]/50 border border-dashed border-gray-800 p-3.5 rounded-xl space-y-3">
+                            <div class="flex items-center justify-between text-xs font-medium text-gray-400">
+                                <span class="truncate w-24 text-right">${home.name}</span>
+                                <div class="flex items-center space-x-1 mx-2">
+                                    <input type="number" id="h-score-${match.id}" class="w-10 bg-gray-900 border border-gray-700 rounded p-1 text-center font-bold text-white text-sm focus:outline-none focus:border-cyan-400 [appearance:textfield]">
+                                    <span class="text-gray-600">:</span>
+                                    <input type="number" id="a-score-${match.id}" class="w-10 bg-gray-900 border border-gray-700 rounded p-1 text-center font-bold text-white text-sm focus:outline-none focus:border-cyan-400 [appearance:textfield]">
+                                </div>
+                                <span class="truncate w-24 text-left">${away.name}</span>
+                            </div>
+                            <button onclick="saveMatchScore(${match.id})" class="w-full bg-gradient-to-r from-emerald-500 to-cyan-500 hover:from-emerald-400 hover:to-cyan-400 text-slate-950 font-bold py-1.5 rounded-lg text-xs transition duration-200 cursor-pointer shadow-md">
+                                Save Result
+                            </button>
+                        </div>
+                    `;
+                }
+            });
+        }
+
+        // Initialize system data
+        calculateLeague();
+        renderFixtures();
+    </script>
+</body>
+</html>
