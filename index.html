@@ -1,21 +1,21 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en">	
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Premier League Style Hub</title>
-    <!-- Tailwind CSS for modern styling -->
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <!-- Google Fonts for premium typography -->
+    <title>Super League Cloud Hub</title>
+    <!-- Tailwind CSS for premium responsive layout -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts for typography -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght=400;500;600;700&display=swap" rel="stylesheet">
     <style>
         body {
             font-family: 'Poppins', sans-serif;
             background-color: #0b0e14;
         }
-        /* Custom scrollbar for premium feel */
+        /* Premium Scrollbar */
         ::-webkit-scrollbar {
             width: 6px;
         }
@@ -28,88 +28,218 @@
         }
     </style>
 </head>
-<body class="text-gray-100 min-h-screen">
+<body class="text-gray-100 min-h-screen pb-12">
 
     <!-- Header Navigation -->
-    <nav class="border-b border-gray-800 bg-[#0f141c] sticky top-0 z-50 px-6 py-4">
+    <nav class="border-b border-gray-800 bg-[#0f141c] sticky top-0 z-40 px-6 py-4">
         <div class="max-w-7xl mx-auto flex justify-between items-center">
             <div class="flex items-center space-x-3">
-                <div class="bg-gradient-to-tr from-emerald-400 to-cyan-400 p-2 rounded-xl text-slate-950 font-bold text-xl tracking-wider">
+                <div class="bg-gradient-to-tr from-emerald-400 to-cyan-400 p-2 rounded-xl text-slate-950 font-bold text-xl">
                     🏆
                 </div>
                 <span class="text-xl font-bold tracking-tight bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent">
-                    SOCCER<span class="text-emerald-400 font-medium text-lg ml-1">LEAGUE HUB</span>
+                    SUPER<span class="text-emerald-400 font-medium text-lg ml-1">LEAGUE</span>
                 </span>
             </div>
-            <div class="text-xs bg-emerald-500/10 text-emerald-400 font-semibold px-3 py-1.5 rounded-full border border-emerald-500/20 uppercase tracking-widest">
-                Live Competition
+            
+            <div class="flex items-center space-x-3">
+                <!-- Sync status indicator -->
+                <div id="sync-status" class="hidden md:flex items-center space-x-1.5 text-xs text-gray-400 bg-gray-800/40 px-3 py-1.5 rounded-lg border border-gray-800">
+                    <span class="w-2.5 h-2.5 bg-yellow-500 rounded-full animate-pulse" id="status-dot"></span>
+                    <span id="status-text">Connecting...</span>
+                </div>
+                <!-- Admin portal button -->
+                <button id="admin-toggle-btn" class="text-xs bg-gray-800 hover:bg-gray-700 text-gray-200 font-semibold px-4 py-2 rounded-xl border border-gray-700 transition cursor-pointer flex items-center space-x-2">
+                    <span id="lock-icon">🔒</span>
+                    <span id="admin-btn-text">Admin Login</span>
+                </button>
             </div>
         </div>
     </nav>
 
+    <!-- Global Message Banner -->
+    <div id="toast-banner" class="max-w-7xl mx-auto px-4 mt-4 hidden">
+        <div class="p-4 rounded-xl flex items-center justify-between text-sm" id="toast-container">
+            <span id="toast-message" class="font-medium"></span>
+            <button onclick="dismissToast()" class="text-xs opacity-70 hover:opacity-100 cursor-pointer">✕</button>
+        </div>
+    </div>
+
     <!-- Main Content Grid -->
-    <main class="max-w-7xl mx-auto px-4 py-8 lg:px-6 grid grid-cols-1 lg:grid-cols-3 gap-8">
+    <main class="max-w-7xl mx-auto px-4 py-6 lg:px-6 grid grid-cols-1 lg:grid-cols-3 gap-8">
         
-        <!-- LEFT/CENTER: Standings Table -->
-        <div class="lg:col-span-2 space-y-6">
-            <div class="flex justify-between items-center">
-                <h2 class="text-xl font-bold text-white flex items-center gap-2">
-                    <span class="w-1 h-6 bg-emerald-400 rounded-full"></span> League Standings
-                </h2>
-                <span class="text-xs text-gray-400 font-mono">Live Standings</span>
+        <!-- LEFT/CENTER: Standings Table, Squads, & Teams/Players Management -->
+        <div class="lg:col-span-2 space-y-8">
+            
+            <!-- Standings Section -->
+            <div class="space-y-4">
+                <div class="flex justify-between items-center">
+                    <h2 class="text-xl font-bold text-white flex items-center gap-2">
+                        <span class="w-1 h-6 bg-emerald-400 rounded-full"></span> League Standings
+                    </h2>
+                    <span class="text-xs text-gray-400 font-mono">Real-time Cloud Sync</span>
+                </div>
+
+                <div class="bg-[#0f141c] border border-gray-800 rounded-2xl overflow-hidden shadow-xl">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="border-b border-gray-800 bg-[#141b26] text-xs font-semibold text-gray-400 uppercase tracking-wider">
+                                    <th class="py-4 px-4 text-center w-12">Pos</th>
+                                    <th class="py-4 px-4">Club</th>
+                                    <th class="py-4 px-3 text-center">P</th>
+                                    <th class="py-4 px-3 text-center">W</th>
+                                    <th class="py-4 px-3 text-center">D</th>
+                                    <th class="py-4 px-3 text-center">L</th>
+                                    <th class="py-4 px-3 text-center text-emerald-400 font-bold">GF</th>
+                                    <th class="py-4 px-3 text-center">GD</th>
+                                    <th class="py-4 px-4 text-center text-emerald-400 font-bold bg-emerald-500/5">Pts</th>
+                                </tr>
+                            </thead>
+                            <tbody id="standings-body" class="divide-y divide-gray-800/50 text-sm">
+                                <tr>
+                                    <td colspan="9" class="py-12 text-center text-gray-400">Loading live league database...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
 
-            <div class="bg-[#0f141c] border border-gray-800 rounded-2xl overflow-hidden shadow-xl">
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left border-collapse">
-                        <thead>
-                            <tr class="border-b border-gray-800 bg-[#141b26] text-xs font-semibold text-gray-400 uppercase tracking-wider">
-                                <th class="py-4 px-4 text-center w-12">Pos</th>
-                                <th class="py-4 px-4">Club</th>
-                                <th class="py-4 px-3 text-center">P</th>
-                                <th class="py-4 px-3 text-center">W</th>
-                                <th class="py-4 px-3 text-center">D</th>
-                                <th class="py-4 px-3 text-center">L</th>
-                                <th class="py-4 px-3 text-center font-medium text-gray-300">GD</th>
-                                <th class="py-4 px-4 text-center text-emerald-400 font-bold bg-emerald-500/5">Pts</th>
-                            </tr>
-                        </thead>
-                        <tbody id="standings-body" class="divide-y divide-gray-800/50 text-sm">
-                            <!-- Dynamic Content injected via JS -->
-                        </tbody>
-                    </table>
+            <!-- Squad Rosters Section -->
+            <div class="space-y-4">
+                <h2 class="text-xl font-bold text-white flex items-center gap-2">
+                    <span class="w-1 h-6 bg-cyan-400 rounded-full"></span> Team Squads
+                </h2>
+                <div id="squads-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="col-span-1 md:col-span-2 py-6 text-center text-gray-500 text-xs">Loading squad lists...</div>
+                </div>
+            </div>
+
+            <!-- ADMIN ONLY: Team & Player Manager -->
+            <div id="admin-teams-panel" class="bg-[#0f141c] border border-emerald-500/20 rounded-2xl p-6 shadow-xl space-y-6 hidden">
+                <div class="flex items-center justify-between border-b border-gray-800 pb-3">
+                    <div class="flex items-center space-x-2">
+                        <span class="text-lg">🛡️</span>
+                        <h3 class="text-md font-bold text-emerald-400">Admin Control Panel</h3>
+                    </div>
+                    <!-- Panel tab options -->
+                    <div class="flex space-x-1 bg-gray-900 p-1 rounded-lg">
+                        <button onclick="switchAdminTab('teams')" id="tab-btn-teams" class="text-xs font-semibold px-3 py-1.5 rounded-md bg-emerald-500 text-slate-950 cursor-pointer">Teams</button>
+                        <button onclick="switchAdminTab('players')" id="tab-btn-players" class="text-xs font-semibold px-3 py-1.5 rounded-md text-gray-400 hover:text-white cursor-pointer">Players & Stats</button>
+                    </div>
+                </div>
+                
+                <!-- TEAM MANAGER VIEW -->
+                <div id="admin-tab-teams-view" class="space-y-4">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="space-y-2">
+                            <label class="block text-xs text-gray-400 font-medium uppercase">Add New Team</label>
+                            <div class="flex space-x-2">
+                                <input type="text" id="new-team-name" placeholder="e.g. Oshakati City" class="flex-1 bg-gray-900 border border-gray-700 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-emerald-400 text-white">
+                                <button onclick="addNewTeam()" class="bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold px-4 py-2 rounded-xl text-xs transition cursor-pointer">Add</button>
+                            </div>
+                        </div>
+                        <div class="space-y-2">
+                            <label class="block text-xs text-gray-400 font-medium uppercase">Registered Clubs</label>
+                            <div id="admin-teams-list" class="max-h-40 overflow-y-auto space-y-1.5 pr-1">
+                                <!-- Injected dynamically -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PLAYER MANAGER VIEW -->
+                <div id="admin-tab-players-view" class="space-y-4 hidden">
+                    <!-- Realtime Audit Log to prevent errors -->
+                    <div id="admin-stats-audit-log" class="min-h-[44px]">
+                        <div class="text-gray-500 text-xs italic p-3 border border-gray-800/40 rounded-xl bg-gray-950/20">
+                            ℹ️ Adjust baseline player stats directly below, or record events when entering match results!
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <!-- Add Player Form -->
+                        <div class="space-y-3 bg-gray-900/40 p-4 rounded-xl border border-gray-800">
+                            <h4 class="text-xs font-bold uppercase text-gray-300">Add New Player</h4>
+                            <div class="space-y-2">
+                                <input type="text" id="new-player-name" placeholder="Player Name" class="w-full bg-gray-900 border border-gray-700 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-emerald-400 text-white">
+                                <select id="new-player-team" class="w-full bg-gray-900 border border-gray-700 rounded-xl p-2 text-xs text-gray-300 focus:outline-none">
+                                    <!-- Injected dynamically -->
+                                </select>
+                                <button onclick="addNewPlayer()" class="w-full bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold py-2 rounded-xl text-xs transition cursor-pointer">
+                                    Register Player
+                                </button>
+                            </div>
+                        </div>
+                        <!-- Player Stats List Manager -->
+                        <div class="md:col-span-2 space-y-2">
+                            <h4 class="text-xs font-bold uppercase text-gray-300">Baseline Player Adjustments (Pre-match / Manual)</h4>
+                            <div class="bg-gray-900/20 border border-gray-800 rounded-xl overflow-hidden">
+                                <div class="max-h-60 overflow-y-auto divide-y divide-gray-800/60 p-2" id="admin-players-list">
+                                    <!-- List of players with +/- stat buttons -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <!-- RIGHT: Match Center & Goal Scorers -->
+        <!-- RIGHT: Match Center & Stats Leaderboards -->
         <div class="space-y-8">
             
             <!-- Match Center Panel -->
             <div>
-                <h2 class="text-xl font-bold text-white mb-6 flex items-center gap-2">
-                    <span class="w-1 h-6 bg-cyan-400 rounded-full"></span> Match Center
-                </h2>
-                <div class="bg-[#0f141c] border border-gray-800 rounded-2xl p-5 shadow-xl space-y-4 max-h-[450px] overflow-y-auto" id="fixtures-container">
-                    <!-- Dynamic Fixtures injected via JS -->
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-xl font-bold text-white flex items-center gap-2">
+                        <span class="w-1 h-6 bg-cyan-400 rounded-full"></span> Match Center
+                    </h2>
+                    <div class="flex items-center space-x-2">
+                        <button id="admin-generate-fixtures-btn" onclick="triggerAutoGenerate()" class="hidden text-xs bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-3 py-1.5 rounded-lg transition cursor-pointer">
+                            ⚡ Auto-Generate
+                        </button>
+                        <button id="admin-add-fixture-btn" onclick="openAddFixtureModal()" class="hidden text-xs bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-400 border border-cyan-500/30 px-3 py-1.5 rounded-lg transition cursor-pointer">
+                            + New Match
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="bg-gray-900/50 border border-gray-800/80 p-3 rounded-2xl mb-4 flex flex-col sm:flex-row gap-2.5 items-center justify-between">
+                    <input type="text" id="fixture-search-input" oninput="filterAndRenderFixtures()" placeholder="🔍 Search team..." class="w-full sm:w-auto flex-1 bg-gray-950 border border-gray-800 hover:border-gray-700 text-xs text-white rounded-xl px-3 py-2 focus:outline-none focus:border-cyan-400 transition-colors">
+                    <div class="flex gap-1 w-full sm:w-auto">
+                        <button onclick="setFixtureFilter('all')" id="filter-btn-all" class="flex-1 sm:flex-none text-[10px] font-bold px-3 py-2 rounded-lg bg-cyan-500 text-slate-950 transition-all cursor-pointer">All</button>
+                        <button onclick="setFixtureFilter('played')" id="filter-btn-played" class="flex-1 sm:flex-none text-[10px] font-bold px-3 py-2 rounded-lg text-gray-400 bg-gray-900 hover:text-white transition-all cursor-pointer">Played / Recaps</button>
+                        <button onclick="setFixtureFilter('upcoming')" id="filter-btn-upcoming" class="flex-1 sm:flex-none text-[10px] font-bold px-3 py-2 rounded-lg text-gray-400 bg-gray-900 hover:text-white transition-all cursor-pointer">Upcoming</button>
+                    </div>
+                </div>
+                
+                <div class="bg-[#0f141c] border border-gray-800 rounded-2xl p-5 shadow-xl space-y-4 max-h-[400px] overflow-y-auto" id="fixtures-container">
+                    <!-- Loaded dynamically -->
+                    <div class="py-12 text-center text-gray-500 text-sm">Loading fixtures...</div>
                 </div>
             </div>
 
-            <!-- Golden Boot Tracker Panel -->
+            <!-- Stats Tracker Widget -->
             <div>
-                <h2 class="text-xl font-bold text-white mb-6 flex items-center gap-2">
-                    <span class="w-1 h-6 bg-amber-400 rounded-full"></span> Golden Boot
-                </h2>
-                <div class="bg-[#0f141c] border border-gray-800 rounded-2xl p-4 shadow-xl divide-y divide-gray-800/60">
-                    <div class="flex items-center justify-between py-3 first:pt-0 last:pb-0">
-                        <div class="flex items-center space-x-3">
-                            <span class="text-amber-400 font-bold text-sm bg-amber-400/10 w-6 h-6 rounded-full flex items-center justify-center">1</span>
-                            <div>
-                                <h4 class="font-semibold text-sm text-white">Top Scorer</h4>
-                                <p class="text-xs text-gray-400">Update in source if needed</p>
-                            </div>
-                        </div>
-                        <span class="text-sm font-bold bg-gray-800 px-2.5 py-1 rounded-md text-amber-400">0 Goals</span>
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-xl font-bold text-white flex items-center gap-2">
+                        <span class="w-1 h-6 bg-amber-400 rounded-full"></span> Stats Leaderboards
+                    </h2>
+                </div>
+                
+                <div class="bg-[#0f141c] border border-gray-800 rounded-2xl p-5 shadow-xl space-y-4">
+                    <!-- Stat Leaderboard Tabs -->
+                    <div class="flex border-b border-gray-800 pb-2 gap-1 overflow-x-auto">
+                        <button onclick="switchStatsTab('goals')" id="stat-tab-goals" class="text-[11px] uppercase tracking-wider font-bold px-3 py-1.5 rounded-lg bg-amber-400/10 text-amber-400 border border-amber-400/20 cursor-pointer whitespace-nowrap">⚽ Golden Boot</button>
+                        <button onclick="switchStatsTab('assists')" id="stat-tab-assists" class="text-[11px] uppercase tracking-wider font-bold px-3 py-1.5 rounded-lg text-gray-400 hover:text-white cursor-pointer whitespace-nowrap">👟 Assists</button>
+                        <button onclick="switchStatsTab('own-goals')" id="stat-tab-own-goals" class="text-[11px] uppercase tracking-wider font-bold px-3 py-1.5 rounded-lg text-gray-400 hover:text-white cursor-pointer whitespace-nowrap">⚠️ Own Goals</button>
+                    </div>
+
+                    <!-- List Container -->
+                    <div class="divide-y divide-gray-800/60 max-h-60 overflow-y-auto pr-1" id="scorers-container">
+                        <!-- Loaded dynamically -->
+                        <div class="text-center py-4 text-gray-500 text-xs">No statistics recorded.</div>
                     </div>
                 </div>
             </div>
@@ -117,106 +247,430 @@
         </div>
     </main>
 
-    <!-- JavaScript Engine Handling Calculations -->
-    <script>
-        // 1. Core Data: Your 6 updated teams
-        let teams = [
-            { id: "OFC", name: "Odha Fc", p: 0, w: 0, d: 0, l: 0, gf: 0, ga: 0, gd: 0, pts: 0 },
-            { id: "DNFC", name: "Deez Nuts Fc", p: 0, w: 0, d: 0, l: 0, gf: 0, ga: 0, gd: 0, pts: 0 },
-            { id: "AMAG", name: "Amaguruguru", p: 0, w: 0, d: 0, l: 0, gf: 0, ga: 0, gd: 0, pts: 0 },
-            { id: "GARW", name: "Golden Arrows", p: 0, w: 0, d: 0, l: 0, gf: 0, ga: 0, gd: 0, pts: 0 },
-            { id: "MPK", name: "MPK", p: 0, w: 0, d: 0, l: 0, gf: 0, ga: 0, gd: 0, pts: 0 },
-            { id: "GOLD", name: "Golden", p: 0, w: 0, d: 0, l: 0, gf: 0, ga: 0, gd: 0, pts: 0 }
-        ];
+    <!-- ADMIN LOGIN MODAL -->
+    <div id="admin-modal" class="fixed inset-0 bg-black/80 flex items-center justify-center p-4 z-50 hidden">
+        <div class="bg-[#0f141c] border border-gray-800 rounded-2xl w-full max-w-sm p-6 space-y-4 shadow-2xl relative animate-in fade-in zoom-in-95 duration-150">
+            <button onclick="closeAdminModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white cursor-pointer">✕</button>
+            <div class="text-center">
+                <span class="text-3xl">🛡️</span>
+                <h3 class="text-lg font-bold text-white mt-2">Super League Admin Portal</h3>
+                <p class="text-xs text-gray-400 mt-1">Enter your password to unlock database write privileges.</p>
+            </div>
+            <div class="space-y-3">
+                <input type="password" id="admin-passcode" placeholder="Enter Password" class="w-full bg-gray-950 border border-gray-700 rounded-xl px-4 py-3 text-sm text-center focus:outline-none focus:border-emerald-400 text-white">
+                <div id="login-error" class="text-xs text-rose-400 text-center hidden">Incorrect passcode!</div>
+                <button onclick="attemptLogin()" class="w-full bg-gradient-to-r from-emerald-500 to-cyan-500 hover:from-emerald-400 hover:to-cyan-400 text-slate-950 font-bold py-2.5 rounded-xl text-sm transition cursor-pointer">
+                    Authorize Access
+                </button>
+            </div>
+        </div>
+    </div>
 
-        // 2. Sample Fixture List generated for your 6 teams
-        let fixtures = [
-            { id: 1, homeId: "OFC", awayId: "DNFC", homeScore: null, awayScore: null, isPlayed: false },
-            { id: 2, homeId: "AMAG", awayId: "GARW", homeScore: null, awayScore: null, isPlayed: false },
-            { id: 3, homeId: "MPK", awayId: "GOLD", homeScore: null, awayScore: null, isPlayed: false },
-            { id: 4, homeId: "DNFC", awayId: "AMAG", homeScore: null, awayScore: null, isPlayed: false },
-            { id: 5, homeId: "GARW", awayId: "MPK", homeScore: null, awayScore: null, isPlayed: false },
-            { id: 6, homeId: "GOLD", awayId: "OFC", homeScore: null, awayScore: null, isPlayed: false }
-        ];
+    <!-- NEW FIXTURE MODAL -->
+    <div id="fixture-modal" class="fixed inset-0 bg-black/80 flex items-center justify-center p-4 z-50 hidden">
+        <div class="bg-[#0f141c] border border-gray-800 rounded-2xl w-full max-w-md p-6 space-y-4 shadow-2xl relative animate-in fade-in zoom-in-95 duration-150">
+            <button onclick="closeFixtureModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white cursor-pointer">✕</button>
+            <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                📅 Add New Match Fixture
+            </h3>
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-xs text-gray-400 font-medium uppercase mb-1">Home Side</label>
+                    <select id="fixture-home-select" class="w-full bg-gray-900 border border-gray-700 rounded-xl p-2.5 text-xs text-gray-200 focus:outline-none">
+                        <!-- Options filled via JS -->
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs text-gray-400 font-medium uppercase mb-1">Away Side</label>
+                    <select id="fixture-away-select" class="w-full bg-gray-900 border border-gray-700 rounded-xl p-2.5 text-xs text-gray-200 focus:outline-none">
+                        <!-- Options filled via JS -->
+                    </select>
+                </div>
+            </div>
+            <button onclick="saveNewFixture()" class="w-full bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold py-2.5 rounded-xl text-xs transition cursor-pointer">
+                Create Fixture
+            </button>
+        </div>
+    </div>
 
-        function getTeam(id) {
-            return teams.find(t => t.id === id);
+    <!-- MATCH DETAILS / RECAP MODAL (Google Style, image_4912e2.jpg inspired) -->
+    <div id="match-detail-modal" class="fixed inset-0 bg-black/90 flex items-center justify-center p-4 z-50 hidden">
+        <div class="bg-[#0f141c] border border-gray-800 rounded-2xl w-full max-w-lg p-6 space-y-6 shadow-2xl relative animate-in fade-in zoom-in-95 duration-150">
+            <button onclick="closeMatchDetailModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white text-lg cursor-pointer">✕</button>
+            
+            <div class="text-center border-b border-gray-800 pb-3">
+                <span class="text-xs font-bold text-emerald-400 uppercase tracking-widest">Super League Match Recap</span>
+                <p id="detail-match-info" class="text-[10px] text-gray-400 mt-1 uppercase font-mono"></p>
+            </div>
+
+            <!-- Scoreboard Grid -->
+            <div class="grid grid-cols-3 items-center justify-center py-4 bg-gray-900/40 rounded-xl border border-gray-800/40 px-3">
+                <div class="text-center flex flex-col items-center">
+                    <span class="text-2xl mb-1">🛡️</span>
+                    <span id="detail-home-name" class="font-bold text-sm text-white truncate max-w-[120px]"></span>
+                    <span class="text-[9px] text-gray-400 mt-0.5 font-mono">Home</span>
+                </div>
+                <div class="text-center">
+                    <span id="detail-score-line" class="text-2xl font-bold font-mono tracking-wider text-emerald-400"></span>
+                    <div class="text-[9px] bg-gray-800 px-2 py-0.5 rounded-full inline-block text-gray-300 mt-1">Full-time</div>
+                </div>
+                <div class="text-center flex flex-col items-center">
+                    <span class="text-2xl mb-1">⚔️</span>
+                    <span id="detail-away-name" class="font-bold text-sm text-white truncate max-w-[120px]"></span>
+                    <span class="text-[9px] text-gray-400 mt-0.5 font-mono">Away</span>
+                </div>
+            </div>
+
+            <!-- Scorers Timeline Details -->
+            <div class="space-y-4">
+                <h4 class="text-xs font-bold uppercase tracking-wider text-gray-400 border-b border-gray-800 pb-1">Goalscorers & Events</h4>
+                <div class="grid grid-cols-2 gap-4 text-xs">
+                    <!-- Home Stats column -->
+                    <div class="space-y-2 border-r border-gray-800/60 pr-2">
+                        <div id="detail-home-events" class="space-y-1.5 min-h-[40px]">
+                            <!-- Scorers dynamic list -->
+                        </div>
+                    </div>
+                    <!-- Away Stats column -->
+                    <div class="space-y-2 pl-2">
+                        <div id="detail-away-events" class="space-y-1.5 min-h-[40px]">
+                            <!-- Scorers dynamic list -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <button onclick="closeMatchDetailModal()" class="w-full bg-gray-800 hover:bg-gray-700 text-gray-300 font-semibold py-2.5 rounded-xl text-xs transition cursor-pointer">
+                Close Recap
+            </button>
+        </div>
+    </div>
+
+    <!-- ADMIN: ADVANCED MATCH SCORING & EVENTS MODAL -->
+    <div id="admin-score-entry-modal" class="fixed inset-0 bg-black/90 flex items-center justify-center p-4 z-50 hidden">
+        <div class="bg-[#0f141c] border border-emerald-500/30 rounded-2xl w-full max-w-xl p-6 space-y-5 shadow-2xl relative max-h-[90vh] overflow-y-auto">
+            <button onclick="closeAdminScoreEntryModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white text-lg cursor-pointer">✕</button>
+            
+            <div>
+                <h3 class="text-md font-bold text-emerald-400 flex items-center gap-2">
+                    ⚽ Save Match Results & Events
+                </h3>
+                <p class="text-xs text-gray-400 mt-0.5">Input goals, assists and assign them directly to players.</p>
+            </div>
+
+            <!-- Scores setup row -->
+            <div class="grid grid-cols-3 items-center gap-4 bg-gray-900/60 p-4 rounded-xl border border-gray-800">
+                <div class="text-center font-bold text-xs truncate" id="score-modal-home-label">Home</div>
+                <div class="flex items-center justify-center space-x-2">
+                    <input type="number" min="0" id="score-entry-home" value="0" oninput="validateScoreGoalsMatch()" class="w-12 bg-gray-950 border border-gray-700 rounded-lg p-2 text-center text-sm font-bold text-white focus:outline-none focus:border-emerald-400">
+                    <span class="text-gray-500">:</span>
+                    <input type="number" min="0" id="score-entry-away" value="0" oninput="validateScoreGoalsMatch()" class="w-12 bg-gray-950 border border-gray-700 rounded-lg p-2 text-center text-sm font-bold text-white focus:outline-none focus:border-emerald-400">
+                </div>
+                <div class="text-center font-bold text-xs truncate" id="score-modal-away-label">Away</div>
+            </div>
+
+            <!-- Validator Banner warning -->
+            <div id="score-goal-mismatch-banner" class="bg-amber-500/10 border border-amber-500/20 p-2.5 rounded-xl text-[11px] text-amber-400 flex items-center justify-between font-medium">
+                <span>⚠️ Allocated: <span id="allocated-goals-sum">0</span> Goals. Mismatch with scoreline!</span>
+                <span class="bg-amber-400 text-slate-950 px-1.5 py-0.5 rounded font-bold font-mono text-[9px]">Check List</span>
+            </div>
+
+            <!-- Event Adder List -->
+            <div class="space-y-3">
+                <div class="flex items-center justify-between border-b border-gray-800 pb-1">
+                    <h4 class="text-xs font-bold uppercase tracking-wider text-gray-300">Goal & Assist Events</h4>
+                    <button onclick="addEventRow()" class="text-[10px] bg-emerald-500/10 border border-emerald-500/20 hover:bg-emerald-500/20 text-emerald-400 font-bold px-2.5 py-1 rounded-lg transition cursor-pointer">
+                        + Add Event
+                    </button>
+                </div>
+                
+                <div id="event-rows-container" class="space-y-2 max-h-48 overflow-y-auto pr-1">
+                    <!-- Events rows will load here -->
+                </div>
+            </div>
+
+            <div class="flex space-x-3">
+                <button onclick="closeAdminScoreEntryModal()" class="flex-1 bg-gray-800 hover:bg-gray-700 text-gray-300 font-semibold py-2 rounded-xl text-xs transition cursor-pointer">
+                    Cancel
+                </button>
+                <button onclick="saveAdminMatchResults()" class="flex-1 bg-gradient-to-r from-emerald-500 to-cyan-500 text-slate-950 font-bold py-2 rounded-xl text-xs transition cursor-pointer shadow-lg">
+                    Confirm & Save Results
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- CUSTOM DIALOGS FOR DELETE CONFIRMATIONS -->
+    <div id="custom-confirm-modal" class="fixed inset-0 bg-black/85 flex items-center justify-center p-4 z-50 hidden">
+        <div class="bg-[#0f141c] border border-red-500/30 rounded-2xl w-full max-w-sm p-6 space-y-4 shadow-2xl relative">
+            <div class="text-center">
+                <span class="text-3xl text-rose-500">⚠️</span>
+                <h3 class="text-lg font-bold text-white mt-2" id="confirm-title">Are you sure?</h3>
+                <p class="text-xs text-gray-400 mt-1" id="confirm-description">This action cannot be undone.</p>
+            </div>
+            <div class="flex space-x-3">
+                <button id="confirm-cancel-btn" class="flex-1 bg-gray-800 hover:bg-gray-700 text-gray-300 font-semibold py-2 rounded-xl text-xs transition cursor-pointer">
+                    Cancel
+                </button>
+                <button id="confirm-action-btn" class="flex-1 bg-red-500 hover:bg-red-400 text-slate-950 font-bold py-2 rounded-xl text-xs transition cursor-pointer">
+                    Delete
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase Architecture Setup & Database Logic -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, setDoc, getDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // Global application identifiers
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-super-soccer-league';
+        const rawFirebaseConfig = typeof __firebase_config !== 'undefined' ? __firebase_config : null;
+
+        const fallbackConfig = {
+            apiKey: "dummy-key-for-local-demo",
+            authDomain: "demo.firebaseapp.com",
+            projectId: "demo-project",
+            storageBucket: "demo.appspot.com",
+            messagingSenderId: "123456789",
+            appId: "1:1234:web:1234"
+        };
+
+        const firebaseConfig = rawFirebaseConfig ? JSON.parse(rawFirebaseConfig) : fallbackConfig;
+        
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // State Machine Variables
+        let activeUser = null;
+        let isAdmin = false;
+        let activeStatsTab = 'goals'; // 'goals', 'assists', 'own-goals'
+        let activeAdminTab = 'teams'; // 'teams', 'players'
+        let confirmationCallback = null;
+        let isOfflineMode = false;
+        
+        // Match Center search and filters
+        let fixtureFilter = 'all';
+        let fixtureSearchQuery = '';
+        
+        // Match currently editing in scoring modal
+        let activeScoringMatchId = null;
+        
+        // Default local state values if database is blank/unreachable
+        let leagueState = {
+            teams: [
+                { id: "PFC", name: "Plak Fc", p: 0, w: 0, d: 0, l: 0, gf: 0, ga: 0, gd: 0, pts: 0 },
+                { id: "DNFC", name: "Deez Nuts Fc", p: 0, w: 0, d: 0, l: 0, gf: 0, ga: 0, gd: 0, pts: 0 },
+                { id: "AMAG", name: "Amaguruguru", p: 0, w: 0, d: 0, l: 0, gf: 0, ga: 0, gd: 0, pts: 0 },
+                { id: "BFTN", name: "BFTN", p: 0, w: 0, d: 0, l: 0, gf: 0, ga: 0, gd: 0, pts: 0 },
+                { id: "MPK", name: "MPK", p: 0, w: 0, d: 0, l: 0, gf: 0, ga: 0, gd: 0, pts: 0 },
+                { id: "SKHA", name: "Skhandasisha", p: 0, w: 0, d: 0, l: 0, gf: 0, ga: 0, gd: 0, pts: 0 }
+            ],
+            fixtures: [
+                { id: 1, homeId: "PFC", awayId: "DNFC", homeScore: null, awayScore: null, isPlayed: false, gameWeek: 1, day: "Friday", slot: 1, events: [] },
+                { id: 2, homeId: "AMAG", awayId: "BFTN", homeScore: null, awayScore: null, isPlayed: false, gameWeek: 1, day: "Friday", slot: 2, events: [] },
+                { id: 3, homeId: "MPK", awayId: "SKHA", homeScore: null, awayScore: null, isPlayed: false, gameWeek: 1, day: "Saturday", slot: 1, events: [] }
+            ],
+            players: [],
+            adminPin: "Windhoek"
+        };
+
+        // Reference target document inside public artifacts namespace
+        const stateDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'leagueState', 'main');
+
+        // 2-Second Cloud Watchdog Failsafe
+        const connectionTimeout = setTimeout(() => {
+            if (!isOfflineMode && (!leagueState.teams || leagueState.teams.length === 6 && leagueState.teams[0].p === 0)) {
+                console.warn("Failsafe activated: Cloud database took too long. Loading Local Storage.");
+                activateLocalSandboxMode();
+            }
+        }, 2000);
+
+        function activateLocalSandboxMode() {
+            isOfflineMode = true;
+            clearTimeout(connectionTimeout);
+            
+            // Try reading from browser local memory
+            const cachedData = localStorage.getItem('super_league_local_state');
+            if (cachedData) {
+                try {
+                    leagueState = JSON.parse(cachedData);
+                } catch(e) {
+                    console.error("Failed to parse local storage cache", e);
+                }
+            }
+            
+            calculateAndRefreshAllViews();
+            updateSyncStatus(false, "Local Sandbox");
+            showToast("Operating in Local Sandbox Mode. All changes saved locally!", "info");
         }
 
-        // 3. Main System Function: Recalculate Table Standings
-        function calculateLeague() {
-            teams.forEach(t => {
-                t.p = 0; t.w = 0; t.d = 0; t.l = 0; t.gf = 0; t.ga = 0; t.gd = 0; t.pts = 0;
+        const initAuthSession = async () => {
+            try {
+                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                    await signInWithCustomToken(auth, __initial_auth_token);
+                } else {
+                    await signInAnonymously(auth);
+                }
+            } catch (err) {
+                console.error("Authentication init failure:", err);
+                activateLocalSandboxMode();
+            }
+        };
+
+        initAuthSession();
+
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                activeUser = user;
+                startRealtimeSubscription();
+            } else {
+                activateLocalSandboxMode();
+            }
+        });
+
+        function startRealtimeSubscription() {
+            if (!activeUser || isOfflineMode) return;
+
+            onSnapshot(stateDocRef, (docSnap) => {
+                clearTimeout(connectionTimeout);
+                if (docSnap.exists()) {
+                    const incomingState = docSnap.data();
+                    if (incomingState && incomingState.teams) {
+                        if (!incomingState.players) {
+                            incomingState.players = [];
+                        }
+                        incomingState.adminPin = "Windhoek";
+                        
+                        leagueState = incomingState;
+                        calculateAndRefreshAllViews();
+                        updateSyncStatus(true, "Synchronized");
+                    }
+                } else {
+                    pushStateToCloud();
+                }
+            }, (error) => {
+                console.error("Database subscription interrupted:", error);
+                activateLocalSandboxMode();
+            });
+        }
+
+        async function pushStateToCloud() {
+            if (isOfflineMode) {
+                // Save locally
+                localStorage.setItem('super_league_local_state', JSON.stringify(leagueState));
+                updateSyncStatus(false, "Local Sandbox");
+                return;
+            }
+            if (!activeUser) return;
+            try {
+                updateSyncStatus(true, "Saving...");
+                await setDoc(stateDocRef, leagueState);
+                updateSyncStatus(true, "Synchronized");
+            } catch (err) {
+                console.error("Cloud push failed, falling back to local storage:", err);
+                activateLocalSandboxMode();
+            }
+        }
+
+        function calculateAndRefreshAllViews() {
+            // 1. Reset all players computed stats from event metrics back to manual baseline
+            leagueState.players.forEach(p => {
+                p.goals = p.baselineGoals || 0;
+                p.assists = p.baselineAssists || 0;
+                p.ownGoals = p.baselineOwnGoals || 0;
             });
 
-            fixtures.forEach(match => {
-                if (match.isPlayed) {
-                    let home = getTeam(match.homeId);
-                    let away = getTeam(match.awayId);
-
-                    home.p++;
-                    away.p++;
-                    home.gf += match.homeScore;
-                    home.ga += match.awayScore;
-                    away.gf += match.awayScore;
-                    away.ga += match.homeScore;
-
-                    if (match.homeScore > match.awayScore) {
-                        home.w++;
-                        home.pts += 3;
-                        away.l++;
-                    } else if (match.homeScore < match.awayScore) {
-                        away.w++;
-                        away.pts += 3;
-                        home.l++;
-                    } else {
-                        home.d++;
-                        away.d++;
-                        home.pts += 1;
-                        away.pts += 1;
-                    }
-                    home.gd = home.gf - home.ga;
-                    away.gd = away.gf - away.ga;
+            // 2. Accumulate individual match goals & assists dynamically from matches
+            leagueState.fixtures.forEach(match => {
+                if (match.isPlayed && match.events) {
+                    match.events.forEach(ev => {
+                        let player = leagueState.players.find(p => p.id === ev.playerId);
+                        if (player) {
+                            const countVal = parseInt(ev.count) || 1;
+                            if (ev.type === 'goal') {
+                                player.goals += countVal;
+                            } else if (ev.type === 'assist') {
+                                player.assists += countVal;
+                            } else if (ev.type === 'ownGoal') {
+                                player.ownGoals += countVal;
+                            }
+                        }
+                    });
                 }
             });
 
-            // Sorting Rules: Points -> Goal Difference -> Goals Scored
-            teams.sort((a, b) => {
+            // 3. Reset team statistics to zero
+            leagueState.teams.forEach(t => {
+                t.p = 0; t.w = 0; t.d = 0; t.l = 0; t.gf = 0; t.ga = 0; t.gd = 0; t.pts = 0;
+            });
+
+            // 4. Recount and calculate based on match history
+            leagueState.fixtures.forEach(match => {
+                if (match.isPlayed) {
+                    let home = leagueState.teams.find(t => t.id === match.homeId);
+                    let away = leagueState.teams.find(t => t.id === match.awayId);
+
+                    if (home && away) {
+                        home.p++;
+                        away.p++;
+                        home.gf += parseInt(match.homeScore) || 0;
+                        home.ga += parseInt(match.awayScore) || 0;
+                        away.gf += parseInt(match.awayScore) || 0;
+                        away.ga += parseInt(match.homeScore) || 0;
+
+                        if (match.homeScore > match.awayScore) {
+                            home.w++;
+                            home.pts += 3;
+                            away.l++;
+                        } else if (match.homeScore < match.awayScore) {
+                            away.w++;
+                            away.pts += 3;
+                            home.l++;
+                        } else {
+                            home.d++;
+                            away.d++;
+                            home.pts += 1;
+                            away.pts += 1;
+                        }
+                        home.gd = home.gf - home.ga;
+                        away.gd = away.gf - away.ga;
+                    }
+                }
+            });
+
+            // Sort Standings Table: Points -> Goal Difference -> Goals For
+            leagueState.teams.sort((a, b) => {
                 if (b.pts !== a.pts) return b.pts - a.pts;
                 if (b.gd !== a.gd) return b.gd - a.gd;
                 return b.gf - a.gf;
             });
 
-            renderTable();
+            renderTableUI();
+            renderFixturesUI();
+            renderStatsLeaderboardsUI();
+            updateDropdownMenus();
+            renderAdminTeamsUI();
+            renderAdminPlayersUI();
+            renderSquadsUI();
         }
 
-        // 4. Update individual match record
-        function saveMatchScore(matchId) {
-            const hInput = document.getElementById(`h-score-${matchId}`).value;
-            const aInput = document.getElementById(`a-score-${matchId}`).value;
-
-            if (hInput === "" || aInput === "") {
-                alert("Please enter scores for both sides!");
-                return;
-            }
-
-            let match = fixtures.find(f => f.id === matchId);
-            match.homeScore = parseInt(hInput);
-            match.awayScore = parseInt(aInput);
-            match.isPlayed = true;
-
-            calculateLeague();
-            renderFixtures();
-        }
-
-        // 5. Render HTML: Standings View Template
-        function renderTable() {
+        function renderTableUI() {
             const tbody = document.getElementById('standings-body');
             tbody.innerHTML = '';
 
-            teams.forEach((team, index) => {
+            if (leagueState.teams.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="9" class="py-12 text-center text-gray-400">No teams registered.</td></tr>`;
+                return;
+            }
+
+            leagueState.teams.forEach((team, index) => {
                 const pos = index + 1;
-                const posClass = pos === 1 ? 'text-emerald-400 font-bold bg-emerald-500/10 rounded-lg p-1' : 'text-gray-400';
+                const posClass = pos === 1 ? 'text-emerald-400 font-bold bg-emerald-500/10 rounded-lg p-1.5' : 'text-gray-400';
                 
                 tbody.innerHTML += `
                     <tr class="hover:bg-gray-800/30 transition-colors">
@@ -226,6 +680,7 @@
                         <td class="py-4 px-3 text-center text-gray-300 font-mono">${team.w}</td>
                         <td class="py-4 px-3 text-center text-gray-300 font-mono">${team.d}</td>
                         <td class="py-4 px-3 text-center text-gray-300 font-mono">${team.l}</td>
+                        <td class="py-4 px-3 text-center text-emerald-400 font-semibold font-mono">${team.gf}</td>
                         <td class="py-4 px-3 text-center font-mono ${team.gd > 0 ? 'text-cyan-400' : team.gd < 0 ? 'text-rose-400' : 'text-gray-400'}">${team.gd > 0 ? '+' + team.gd : team.gd}</td>
                         <td class="py-4 px-4 text-center text-emerald-400 font-bold font-mono bg-emerald-500/[0.02]">${team.pts}</td>
                     </tr>
@@ -233,49 +688,1102 @@
             });
         }
 
-        // 6. Render HTML: Match Fixtures Panel
-        function renderFixtures() {
+        function renderSquadsUI() {
+            const grid = document.getElementById('squads-grid');
+            if (!grid) return;
+            grid.innerHTML = '';
+
+            if (leagueState.teams.length === 0) {
+                grid.innerHTML = `<div class="col-span-1 md:col-span-2 py-8 text-center text-gray-400 text-xs">No teams registered to display squads.</div>`;
+                return;
+            }
+
+            leagueState.teams.forEach(team => {
+                // Find all players registered to this team
+                const squad = leagueState.players.filter(p => p.teamId === team.id);
+
+                let playersListHTML = '';
+                if (squad.length === 0) {
+                    playersListHTML = `<p class="text-[11px] text-gray-500 italic py-2">No players registered to this squad yet.</p>`;
+                } else {
+                    playersListHTML = squad.map(p => `
+                        <div class="flex justify-between items-center py-1.5 border-b border-gray-800/40 text-xs">
+                            <span class="text-gray-300 font-medium truncate pr-2">${p.name}</span>
+                            <span class="text-gray-500 text-[10px] font-mono whitespace-nowrap">
+                                ⚽ <span class="text-amber-400/90 mr-1">${p.goals || 0}</span> 👟 <span class="text-cyan-400/90">${p.assists || 0}</span>
+                            </span>
+                        </div>
+                    `).join('');
+                }
+
+                grid.innerHTML += `
+                    <div class="bg-[#0f141c] border border-gray-800/80 rounded-xl p-4 shadow-md hover:border-cyan-500/20 transition-all duration-200">
+                        <div class="flex items-center justify-between border-b border-gray-800 pb-2 mb-3">
+                            <h3 class="font-bold text-xs text-white flex items-center gap-2">
+                                <span class="w-2 h-2 rounded-full bg-cyan-400"></span> ${team.name}
+                            </h3>
+                            <span class="text-[9px] bg-cyan-500/10 text-cyan-400 px-2 py-0.5 rounded-full font-bold font-mono">
+                                ${squad.length} Player${squad.length === 1 ? '' : 's'}
+                            </span>
+                        </div>
+                        <div class="space-y-1 max-h-40 overflow-y-auto pr-1">
+                            ${playersListHTML}
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function renderFixturesUI() {
             const container = document.getElementById('fixtures-container');
             container.innerHTML = '';
 
-            fixtures.forEach(match => {
-                let home = getTeam(match.homeId);
-                let away = getTeam(match.awayId);
+            if (leagueState.fixtures.length === 0) {
+                container.innerHTML = `<div class="text-center py-12 text-gray-500 text-sm">No matches scheduled yet.</div>`;
+                return;
+            }
+
+            // Sort fixtures: Game Week/Weekend -> Day (Friday then Saturday) -> Round Slot
+            let sortedFixtures = [...leagueState.fixtures].sort((a, b) => {
+                const gwA = a.gameWeek || 1;
+                const gwB = b.gameWeek || 1;
+                if (gwA !== gwB) return gwA - gwB;
+
+                const dayOrder = { "Friday": 1, "Saturday": 2 };
+                const dayA = dayOrder[a.day] || 3;
+                const dayB = dayOrder[b.day] || 3;
+                if (dayA !== dayB) return dayA - dayB;
+
+                return (a.slot || 1) - (b.slot || 1);
+            });
+
+            // Filter fixtures by search input and selected tab filter
+            sortedFixtures = sortedFixtures.filter(match => {
+                let home = leagueState.teams.find(t => t.id === match.homeId);
+                let away = leagueState.teams.find(t => t.id === match.awayId);
+                if (!home || !away) return false;
+
+                const matchesSearch = home.name.toLowerCase().includes(fixtureSearchQuery) || 
+                                      away.name.toLowerCase().includes(fixtureSearchQuery);
+                if (!matchesSearch) return false;
+
+                if (fixtureFilter === 'played') return match.isPlayed;
+                if (fixtureFilter === 'upcoming') return !match.isPlayed;
+                return true;
+            });
+
+            if (sortedFixtures.length === 0) {
+                container.innerHTML = `<div class="text-center py-12 text-gray-500 text-xs">No matching fixtures found.</div>`;
+                return;
+            }
+
+            let currentGroup = null;
+
+            sortedFixtures.forEach(match => {
+                let home = leagueState.teams.find(t => t.id === match.homeId);
+                let away = leagueState.teams.find(t => t.id === match.awayId);
+
+                if (!home || !away) return;
+
+                const matchDay = match.day || "Friday";
+                const matchSlot = match.slot || 1;
+                const matchGW = match.gameWeek || 1;
+                const groupKey = `GW${matchGW}-${matchDay}-R${matchSlot}`;
+
+                if (groupKey !== currentGroup) {
+                    currentGroup = groupKey;
+                    container.innerHTML += `
+                        <div class="text-[10px] font-bold text-emerald-400 bg-[#141b26] border border-gray-800/80 rounded-lg px-2.5 py-2 mt-4 mb-2 uppercase tracking-wider text-center">
+                            📅 Weekend ${matchGW} • ${matchDay} (Round ${matchSlot})
+                        </div>
+                    `;
+                }
 
                 if (match.isPlayed) {
+                    // Clicking this completed match will trigger Google-style Match Recap
                     container.innerHTML += `
-                        <div class="bg-[#141b26] border border-gray-800/60 p-3.5 rounded-xl flex items-center justify-between text-xs">
+                        <div onclick="openMatchDetailModal(${match.id})" class="relative group bg-[#141b26] border border-gray-800/60 p-3.5 rounded-xl flex items-center justify-between text-xs cursor-pointer hover:border-emerald-500/40 transition-all duration-200">
                             <div class="flex-1 text-right font-medium text-gray-200 pr-2 truncate">${home.name}</div>
-                            <div class="bg-gray-900 px-3 py-1.5 rounded-lg font-mono font-bold text-sm tracking-wider text-cyan-400 border border-gray-800">
+                            <div class="bg-gray-900 px-3 py-1.5 rounded-lg font-mono font-bold text-sm tracking-wider text-cyan-400 border border-gray-800 flex items-center gap-1.5">
                                 ${match.homeScore} - ${match.awayScore}
+                                <span class="text-[9px] text-gray-500 group-hover:text-emerald-400">📊</span>
                             </div>
                             <div class="flex-1 text-left font-medium text-gray-200 pl-2 truncate">${away.name}</div>
+                            
+                            ${isAdmin ? `
+                                <div class="absolute right-2 top-1/2 -translate-y-1/2 flex items-center space-x-1.5 opacity-0 group-hover:opacity-100 transition duration-150">
+                                    <button onclick="event.stopPropagation(); triggerEditMatchResults(${match.id})" class="bg-emerald-500/20 hover:bg-emerald-500/80 text-white rounded p-1 cursor-pointer" title="Edit scorers">
+                                        ✏️
+                                    </button>
+                                    <button onclick="event.stopPropagation(); triggerDeleteFixture(${match.id})" class="bg-red-500/20 hover:bg-red-500/80 text-white rounded p-1 cursor-pointer" title="Delete fixture">
+                                        🗑️
+                                    </button>
+                                </div>
+                            ` : ''}
                         </div>
                     `;
                 } else {
-                    container.innerHTML += `
-                        <div class="bg-[#141b26]/50 border border-dashed border-gray-800 p-3.5 rounded-xl space-y-3">
-                            <div class="flex items-center justify-between text-xs font-medium text-gray-400">
-                                <span class="truncate w-24 text-right">${home.name}</span>
-                                <div class="flex items-center space-x-1 mx-2">
-                                    <input type="number" id="h-score-${match.id}" class="w-10 bg-gray-900 border border-gray-700 rounded p-1 text-center font-bold text-white text-sm focus:outline-none focus:border-cyan-400 [appearance:textfield]">
-                                    <span class="text-gray-600">:</span>
-                                    <input type="number" id="a-score-${match.id}" class="w-10 bg-gray-900 border border-gray-700 rounded p-1 text-center font-bold text-white text-sm focus:outline-none focus:border-cyan-400 [appearance:textfield]">
+                    if (isAdmin) {
+                        container.innerHTML += `
+                            <div class="bg-[#141b26]/50 border border-dashed border-emerald-500/20 p-3.5 rounded-xl space-y-3">
+                                <div class="flex items-center justify-between text-xs font-medium text-gray-400">
+                                    <span class="truncate w-24 text-right font-bold text-white">${home.name}</span>
+                                    <div class="flex items-center space-x-2 bg-gray-900/60 px-3 py-1 rounded-lg border border-gray-800">
+                                        <span class="text-[10px] text-emerald-400 uppercase font-bold tracking-wider">Unplayed</span>
+                                    </div>
+                                    <span class="truncate w-24 text-left font-bold text-white">${away.name}</span>
                                 </div>
-                                <span class="truncate w-24 text-left">${away.name}</span>
+                                <div class="flex space-x-2">
+                                    <button onclick="triggerEnterMatchResults(${match.id})" class="flex-1 bg-gradient-to-r from-emerald-500 to-cyan-500 hover:from-emerald-400 hover:to-cyan-400 text-slate-950 font-bold py-1.5 rounded-lg text-xs transition duration-200 cursor-pointer shadow-md">
+                                        Enter Score & Scorers ⚽
+                                    </button>
+                                    <button onclick="triggerDeleteFixture(${match.id})" class="bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/20 px-2.5 py-1.5 rounded-lg text-xs transition cursor-pointer">
+                                        🗑
+                                    </button>
+                                </div>
                             </div>
-                            <button onclick="saveMatchScore(${match.id})" class="w-full bg-gradient-to-r from-emerald-500 to-cyan-500 hover:from-emerald-400 hover:to-cyan-400 text-slate-950 font-bold py-1.5 rounded-lg text-xs transition duration-200 cursor-pointer shadow-md">
-                                Save Result
-                            </button>
-                        </div>
-                    `;
+                        `;
+                    } else {
+                        container.innerHTML += `
+                            <div class="bg-[#141b26]/30 border border-gray-800/40 p-3.5 rounded-xl flex items-center justify-between text-xs text-gray-400">
+                                <div class="flex-1 text-right truncate pr-2">${home.name}</div>
+                                <div class="bg-gray-900/60 text-gray-500 px-3 py-1.5 rounded-lg font-mono text-xs tracking-wider border border-gray-800/80 text-center w-12">
+                                    VS
+                                </div>
+                                <div class="flex-1 text-left truncate pl-2">${away.name}</div>
+                            </div>
+                        `;
+                    }
                 }
             });
         }
 
-        // Initialize system data
-        calculateLeague();
-        renderFixtures();
+        window.openMatchDetailModal = function(matchId) {
+            const match = leagueState.fixtures.find(f => f.id === matchId);
+            if (!match) return;
+
+            const home = leagueState.teams.find(t => t.id === match.homeId);
+            const away = leagueState.teams.find(t => t.id === match.awayId);
+            if (!home || !away) return;
+
+            document.getElementById('detail-match-info').textContent = `Weekend ${match.gameWeek || 1} • ${match.day} (Round ${match.slot || 1})`;
+            document.getElementById('detail-home-name').textContent = home.name;
+            document.getElementById('detail-away-name').textContent = away.name;
+            document.getElementById('detail-score-line').textContent = `${match.homeScore} - ${match.awayScore}`;
+
+            const homeEventsEl = document.getElementById('detail-home-events');
+            const awayEventsEl = document.getElementById('detail-away-events');
+            
+            homeEventsEl.innerHTML = '';
+            awayEventsEl.innerHTML = '';
+
+            const events = match.events || [];
+            
+            // Separate event types
+            const homeScorers = [];
+            const homeAssists = [];
+            const homeOGs = [];
+
+            const awayScorers = [];
+            const awayAssists = [];
+            const awayOGs = [];
+
+            events.forEach(ev => {
+                const player = leagueState.players.find(p => p.id === ev.playerId);
+                if (!player) return;
+
+                const labelText = `${player.name} (${ev.count})`;
+
+                if (ev.type === 'goal') {
+                    if (player.teamId === home.id) homeScorers.push(labelText);
+                    else awayScorers.push(labelText);
+                } else if (ev.type === 'assist') {
+                    if (player.teamId === home.id) homeAssists.push(labelText);
+                    else awayAssists.push(labelText);
+                } else if (ev.type === 'ownGoal') {
+                    if (player.teamId === home.id) homeOGs.push(`${player.name} (OG)`);
+                    else awayOGs.push(`${player.name} (OG)`);
+                }
+            });
+
+            // Home Column Output
+            if (homeScorers.length > 0) {
+                homeEventsEl.innerHTML += `<div class="font-bold text-[10px] text-amber-400 uppercase tracking-wider mb-0.5">Goals</div>`;
+                homeScorers.forEach(s => {
+                    homeEventsEl.innerHTML += `<div class="flex items-center gap-1 text-gray-200"><span>⚽</span> <span class="truncate">${s}</span></div>`;
+                });
+            }
+            if (homeAssists.length > 0) {
+                homeEventsEl.innerHTML += `<div class="font-bold text-[10px] text-cyan-400 uppercase tracking-wider mt-2 mb-0.5">Assists</div>`;
+                homeAssists.forEach(s => {
+                    homeEventsEl.innerHTML += `<div class="flex items-center gap-1 text-gray-300"><span>👟</span> <span class="truncate">${s}</span></div>`;
+                });
+            }
+            if (homeOGs.length > 0) {
+                homeEventsEl.innerHTML += `<div class="font-bold text-[10px] text-rose-400 uppercase tracking-wider mt-2 mb-0.5">Own Goals</div>`;
+                homeOGs.forEach(s => {
+                    homeEventsEl.innerHTML += `<div class="flex items-center gap-1 text-rose-300"><span>⚠️</span> <span class="truncate">${s}</span></div>`;
+                });
+            }
+            if (homeEventsEl.innerHTML === '') {
+                homeEventsEl.innerHTML = `<div class="text-gray-500 italic py-2">No match stats recorded.</div>`;
+            }
+
+            // Away Column Output
+            if (awayScorers.length > 0) {
+                awayEventsEl.innerHTML += `<div class="font-bold text-[10px] text-amber-400 uppercase tracking-wider mb-0.5">Goals</div>`;
+                awayScorers.forEach(s => {
+                    awayEventsEl.innerHTML += `<div class="flex items-center gap-1 text-gray-200"><span>⚽</span> <span class="truncate">${s}</span></div>`;
+                });
+            }
+            if (awayAssists.length > 0) {
+                awayEventsEl.innerHTML += `<div class="font-bold text-[10px] text-cyan-400 uppercase tracking-wider mt-2 mb-0.5">Assists</div>`;
+                awayAssists.forEach(s => {
+                    awayEventsEl.innerHTML += `<div class="flex items-center gap-1 text-gray-300"><span>👟</span> <span class="truncate">${s}</span></div>`;
+                });
+            }
+            if (awayOGs.length > 0) {
+                awayEventsEl.innerHTML += `<div class="font-bold text-[10px] text-rose-400 uppercase tracking-wider mt-2 mb-0.5">Own Goals</div>`;
+                awayOGs.forEach(s => {
+                    awayEventsEl.innerHTML += `<div class="flex items-center gap-1 text-rose-300"><span>⚠️</span> <span class="truncate">${s}</span></div>`;
+                });
+            }
+            if (awayEventsEl.innerHTML === '') {
+                awayEventsEl.innerHTML = `<div class="text-gray-500 italic py-2">No match stats recorded.</div>`;
+            }
+
+            document.getElementById('match-detail-modal').classList.remove('hidden');
+        };
+
+        window.closeMatchDetailModal = function() {
+            document.getElementById('match-detail-modal').classList.add('hidden');
+        };
+
+        window.triggerEnterMatchResults = function(matchId) {
+            activeScoringMatchId = matchId;
+            const match = leagueState.fixtures.find(f => f.id === matchId);
+            if (!match) return;
+
+            const home = leagueState.teams.find(t => t.id === match.homeId);
+            const away = leagueState.teams.find(t => t.id === match.awayId);
+
+            document.getElementById('score-modal-home-label').textContent = home.name;
+            document.getElementById('score-modal-away-label').textContent = away.name;
+
+            document.getElementById('score-entry-home').value = match.homeScore !== null ? match.homeScore : 0;
+            document.getElementById('score-entry-away').value = match.awayScore !== null ? match.awayScore : 0;
+
+            document.getElementById('event-rows-container').innerHTML = '';
+            
+            // If editing pre-existing result, load those events
+            if (match.events && match.events.length > 0) {
+                match.events.forEach(ev => {
+                    addEventRow(ev.playerId, ev.type, ev.count);
+                });
+            } else {
+                // Add an initial empty row
+                addEventRow();
+            }
+
+            validateScoreGoalsMatch();
+            document.getElementById('admin-score-entry-modal').classList.remove('hidden');
+        };
+
+        window.triggerEditMatchResults = function(matchId) {
+            window.triggerEnterMatchResults(matchId);
+        };
+
+        window.closeAdminScoreEntryModal = function() {
+            document.getElementById('admin-score-entry-modal').classList.add('hidden');
+            activeScoringMatchId = null;
+        };
+
+        window.addEventRow = function(playerId = '', type = 'goal', count = 1) {
+            const container = document.getElementById('event-rows-container');
+            const match = leagueState.fixtures.find(f => f.id === activeScoringMatchId);
+            if (!match) return;
+
+            // Gather players belonging to participating squads
+            const allowedPlayers = leagueState.players.filter(p => p.teamId === match.homeId || p.teamId === match.awayId);
+            
+            if (allowedPlayers.length === 0) {
+                showToast("Please register players to these squads before logging match stats!", "warning");
+                return;
+            }
+
+            const rowId = `event-row-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+
+            let playerOptions = '';
+            allowedPlayers.forEach(p => {
+                const team = leagueState.teams.find(t => t.id === p.teamId);
+                const teamName = team ? team.name : "Unknown";
+                const selectedAttr = p.id === playerId ? 'selected' : '';
+                playerOptions += `<option value="${p.id}" ${selectedAttr}>${p.name} (${teamName})</option>`;
+            });
+
+            const rowHTML = `
+                <div id="${rowId}" class="event-row flex items-center space-x-2 bg-gray-900/40 border border-gray-800 p-2 rounded-xl">
+                    <select class="event-player-select flex-1 bg-gray-950 border border-gray-700 text-xs text-white rounded-lg p-2 focus:outline-none" onchange="validateScoreGoalsMatch()">
+                        <option value="">Select Player</option>
+                        ${playerOptions}
+                    </select>
+                    <select class="event-type-select bg-gray-950 border border-gray-700 text-xs text-white rounded-lg p-2 focus:outline-none" onchange="validateScoreGoalsMatch()">
+                        <option value="goal" ${type === 'goal' ? 'selected' : ''}>⚽ Goal</option>
+                        <option value="assist" ${type === 'assist' ? 'selected' : ''}>👟 Assist</option>
+                        <option value="ownGoal" ${type === 'ownGoal' ? 'selected' : ''}>⚠️ Own Goal</option>
+                    </select>
+                    <input type="number" min="1" value="${count}" class="event-count-input w-12 bg-gray-950 border border-gray-700 text-xs text-center text-white rounded-lg p-2 focus:outline-none" oninput="validateScoreGoalsMatch()">
+                    <button onclick="removeEventRow('${rowId}')" class="text-rose-400 hover:text-rose-300 p-1 cursor-pointer">✕</button>
+                </div>
+            `;
+
+            container.insertAdjacentHTML('beforeend', rowHTML);
+            validateScoreGoalsMatch();
+        };
+
+        window.removeEventRow = function(rowId) {
+            const row = document.getElementById(rowId);
+            if (row) {
+                row.remove();
+            }
+            validateScoreGoalsMatch();
+        };
+
+        window.validateScoreGoalsMatch = function() {
+            const hScore = parseInt(document.getElementById('score-entry-home').value) || 0;
+            const aScore = parseInt(document.getElementById('score-entry-away').value) || 0;
+            const totalScoreGoals = hScore + aScore;
+
+            const rows = document.querySelectorAll('.event-row');
+            let allocatedGoals = 0;
+
+            rows.forEach(row => {
+                const type = row.querySelector('.event-type-select').value;
+                const count = parseInt(row.querySelector('.event-count-input').value) || 0;
+                
+                // Goals and Own Goals both count towards physical scoreboard tallies
+                if (type === 'goal' || type === 'ownGoal') {
+                    allocatedGoals += count;
+                }
+            });
+
+            const banner = document.getElementById('score-goal-mismatch-banner');
+            const allocatedSpan = document.getElementById('allocated-goals-sum');
+            
+            allocatedSpan.textContent = allocatedGoals;
+
+            if (totalScoreGoals === allocatedGoals) {
+                banner.className = "bg-emerald-500/10 border border-emerald-500/20 p-2.5 rounded-xl text-[11px] text-emerald-400 flex items-center justify-between font-medium animate-in fade-in duration-150";
+                banner.innerHTML = `<span>✅ All goals successfully allocated to scorers (${allocatedGoals}/${totalScoreGoals}).</span>`;
+            } else {
+                banner.className = "bg-amber-500/10 border border-amber-500/20 p-2.5 rounded-xl text-[11px] text-amber-400 flex items-center justify-between font-medium";
+                banner.innerHTML = `<span>⚠️ Allocated: ${allocatedGoals} of ${totalScoreGoals} total scoreline goals. Please assign scorers correctly.</span>`;
+            }
+        };
+
+        window.saveAdminMatchResults = async function() {
+            const hScoreInput = document.getElementById('score-entry-home').value;
+            const aScoreInput = document.getElementById('score-entry-away').value;
+
+            if (hScoreInput === "" || aScoreInput === "") {
+                showToast("Please enter valid match scores!", "warning");
+                return;
+            }
+
+            const hScore = parseInt(hScoreInput);
+            const aScore = parseInt(aScoreInput);
+
+            const match = leagueState.fixtures.find(f => f.id === activeScoringMatchId);
+            if (!match) return;
+
+            // Extract events
+            const rows = document.querySelectorAll('.event-row');
+            const events = [];
+
+            let hasEmptySelects = false;
+            rows.forEach(row => {
+                const pId = row.querySelector('.event-player-select').value;
+                const type = row.querySelector('.event-type-select').value;
+                const count = parseInt(row.querySelector('.event-count-input').value) || 1;
+
+                if (!pId) {
+                    hasEmptySelects = true;
+                    return;
+                }
+
+                events.push({
+                    playerId: pId,
+                    type: type,
+                    count: count
+                });
+            });
+
+            if (hasEmptySelects) {
+                showToast("Please select a player for every listed event row, or delete the empty rows!", "warning");
+                return;
+            }
+
+            // Save details onto fixture
+            match.homeScore = hScore;
+            match.awayScore = aScore;
+            match.events = events;
+            match.isPlayed = true;
+
+            closeAdminScoreEntryModal();
+            await pushStateToCloud();
+            calculateAndRefreshAllViews();
+            showToast("Match results and player stats saved successfully!", "success");
+        };
+
+        function renderStatsLeaderboardsUI() {
+            const container = document.getElementById('scorers-container');
+            container.innerHTML = '';
+
+            let sortedPlayers = [...leagueState.players];
+
+            if (activeStatsTab === 'goals') {
+                // Filter and Sort by goals
+                sortedPlayers = sortedPlayers.filter(p => p.goals > 0).sort((a, b) => b.goals - a.goals);
+                if (sortedPlayers.length === 0) {
+                    container.innerHTML = `<div class="text-center py-6 text-gray-500 text-xs">No goals registered yet. Go Super League!</div>`;
+                    return;
+                }
+                
+                sortedPlayers.forEach((p, idx) => {
+                    let team = leagueState.teams.find(t => t.id === p.teamId);
+                    let teamName = team ? team.name : "Free Agent";
+                    container.innerHTML += createLeaderboardRow(idx + 1, p.name, teamName, p.goals, "Goals", "text-amber-400");
+                });
+            } else if (activeStatsTab === 'assists') {
+                // Filter and Sort by assists
+                sortedPlayers = sortedPlayers.filter(p => p.assists > 0).sort((a, b) => b.assists - a.assists);
+                if (sortedPlayers.length === 0) {
+                    container.innerHTML = `<div class="text-center py-6 text-gray-500 text-xs">No assists recorded yet.</div>`;
+                    return;
+                }
+
+                sortedPlayers.forEach((p, idx) => {
+                    let team = leagueState.teams.find(t => t.id === p.teamId);
+                    let teamName = team ? team.name : "Free Agent";
+                    container.innerHTML += createLeaderboardRow(idx + 1, p.name, teamName, p.assists, "Assists", "text-cyan-400");
+                });
+            } else if (activeStatsTab === 'own-goals') {
+                // Filter and Sort by own goals
+                sortedPlayers = sortedPlayers.filter(p => p.ownGoals > 0).sort((a, b) => b.ownGoals - a.ownGoals);
+                if (sortedPlayers.length === 0) {
+                    container.innerHTML = `<div class="text-center py-6 text-gray-500 text-xs">A clean sheet! No own goals registered.</div>`;
+                    return;
+                }
+
+                sortedPlayers.forEach((p, idx) => {
+                    let team = leagueState.teams.find(t => t.id === p.teamId);
+                    let teamName = team ? team.name : "Free Agent";
+                    container.innerHTML += createLeaderboardRow(idx + 1, p.name, teamName, p.ownGoals, "OG", "text-rose-400");
+                });
+            }
+        }
+
+        function createLeaderboardRow(rank, name, team, val, label, colorClass) {
+            let badgeClass = rank === 1 ? `${colorClass} bg-[#141b26] border border-gray-800` : 'text-gray-400 bg-gray-800/40';
+            return `
+                <div class="flex items-center justify-between py-3">
+                    <div class="flex items-center space-x-3">
+                        <span class="font-bold text-xs w-6 h-6 rounded-full flex items-center justify-center ${badgeClass}">${rank}</span>
+                        <div>
+                            <h4 class="font-semibold text-sm text-white">${name}</h4>
+                            <p class="text-[11px] text-gray-400">${team}</p>
+                        </div>
+                    </div>
+                    <span class="text-xs font-bold bg-gray-900 border border-gray-800 px-2.5 py-1 rounded-md ${colorClass}">${val} ${label}</span>
+                </div>
+            `;
+        }
+
+        function renderAdminTeamsUI() {
+            const list = document.getElementById('admin-teams-list');
+            if (!list) return;
+            list.innerHTML = '';
+
+            leagueState.teams.forEach(team => {
+                list.innerHTML += `
+                    <div class="flex items-center justify-between bg-gray-900 border border-gray-800/80 px-3 py-2 rounded-lg text-xs">
+                        <span class="font-medium text-gray-200 truncate">${team.name}</span>
+                        <div class="flex items-center space-x-2">
+                            <button onclick="renameTeamPrompt('${team.id}')" class="text-cyan-400 hover:text-cyan-300 font-semibold cursor-pointer">Rename</button>
+                            <span class="text-gray-700">|</span>
+                            <button onclick="triggerDeleteTeam('${team.id}')" class="text-rose-400 hover:text-rose-300 font-semibold cursor-pointer">Delete</button>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function renderAdminPlayersUI() {
+            const list = document.getElementById('admin-players-list');
+            if (!list) return;
+            list.innerHTML = '';
+
+            if (leagueState.players.length === 0) {
+                list.innerHTML = `<div class="text-center py-6 text-gray-500 text-xs">No registered players yet.</div>`;
+                return;
+            }
+
+            leagueState.players.forEach(p => {
+                let team = leagueState.teams.find(t => t.id === p.teamId);
+                let teamName = team ? team.name : "Free Agent";
+
+                list.innerHTML += `
+                    <div id="player-card-${p.id}" class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 py-3 px-2 border border-transparent rounded-xl transition-all duration-300">
+                        <div class="flex-1 min-w-0">
+                            <h5 class="text-xs font-bold text-white truncate">${p.name}</h5>
+                            <span class="text-[10px] text-gray-400 uppercase tracking-wider">${teamName}</span>
+                        </div>
+                        
+                        <!-- Control stats values -->
+                        <div class="flex items-center justify-between sm:justify-end gap-4">
+                            <!-- Goals counter -->
+                            <div class="flex flex-col items-center">
+                                <span class="text-[9px] text-amber-400 font-bold uppercase tracking-wider mb-1">Goals</span>
+                                <div class="flex items-center space-x-1.5 bg-gray-950 p-1 rounded-lg border border-gray-800">
+                                    <button onclick="updatePlayerStat('${p.id}', 'baselineGoals', -1)" class="w-5 h-5 bg-gray-900 hover:bg-gray-800 rounded text-xs flex items-center justify-center font-bold text-gray-400 cursor-pointer">-</button>
+                                    <span class="w-4 text-center font-mono text-xs text-white font-bold">${p.baselineGoals || 0}</span>
+                                    <button onclick="updatePlayerStat('${p.id}', 'baselineGoals', 1)" class="w-5 h-5 bg-gray-900 hover:bg-gray-800 rounded text-xs flex items-center justify-center font-bold text-gray-400 cursor-pointer">+</button>
+                                </div>
+                            </div>
+
+                            <!-- Assists counter -->
+                            <div class="flex flex-col items-center">
+                                <span class="text-[9px] text-cyan-400 font-bold uppercase tracking-wider mb-1">Assists</span>
+                                <div class="flex items-center space-x-1.5 bg-gray-950 p-1 rounded-lg border border-gray-800">
+                                    <button onclick="updatePlayerStat('${p.id}', 'baselineAssists', -1)" class="w-5 h-5 bg-gray-900 hover:bg-gray-800 rounded text-xs flex items-center justify-center font-bold text-gray-400 cursor-pointer">-</button>
+                                    <span class="w-4 text-center font-mono text-xs text-white font-bold">${p.baselineAssists || 0}</span>
+                                    <button onclick="updatePlayerStat('${p.id}', 'baselineAssists', 1)" class="w-5 h-5 bg-gray-900 hover:bg-gray-800 rounded text-xs flex items-center justify-center font-bold text-gray-400 cursor-pointer">+</button>
+                                </div>
+                            </div>
+
+                            <!-- Own Goals counter -->
+                            <div class="flex flex-col items-center">
+                                <span class="text-[9px] text-rose-400 font-bold uppercase tracking-wider mb-1">OG</span>
+                                <div class="flex items-center space-x-1.5 bg-gray-950 p-1 rounded-lg border border-gray-800">
+                                    <button onclick="updatePlayerStat('${p.id}', 'baselineOwnGoals', -1)" class="w-5 h-5 bg-gray-900 hover:bg-gray-800 rounded text-xs flex items-center justify-center font-bold text-gray-400 cursor-pointer">-</button>
+                                    <span class="w-4 text-center font-mono text-xs text-white font-bold">${p.baselineOwnGoals || 0}</span>
+                                    <button onclick="updatePlayerStat('${p.id}', 'baselineOwnGoals', 1)" class="w-5 h-5 bg-gray-900 hover:bg-gray-800 rounded text-xs flex items-center justify-center font-bold text-gray-400 cursor-pointer">+</button>
+                                </div>
+                            </div>
+
+                            <!-- Delete Player -->
+                            <button onclick="triggerDeletePlayer('${p.id}')" class="w-7 h-7 bg-red-500/10 hover:bg-red-500/20 text-red-400 rounded-lg flex items-center justify-center border border-red-500/20 cursor-pointer mt-4">
+                                🗑
+                            </button>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function updateDropdownMenus() {
+            const homeSelect = document.getElementById('fixture-home-select');
+            const awaySelect = document.getElementById('fixture-away-select');
+            const scorerTeamSelect = document.getElementById('new-player-team');
+
+            if (homeSelect && awaySelect) {
+                homeSelect.innerHTML = '';
+                awaySelect.innerHTML = '';
+                leagueState.teams.forEach(t => {
+                    homeSelect.innerHTML += `<option value="${t.id}">${t.name}</option>`;
+                    awaySelect.innerHTML += `<option value="${t.id}">${t.name}</option>`;
+                });
+            }
+
+            if (scorerTeamSelect) {
+                scorerTeamSelect.innerHTML = '<option value="">Select Team</option>';
+                leagueState.teams.forEach(t => {
+                    scorerTeamSelect.innerHTML += `<option value="${t.id}">${t.name}</option>`;
+                });
+            }
+        }
+
+        window.attemptLogin = function() {
+            const pin = document.getElementById('admin-passcode').value;
+            const errorDiv = document.getElementById('login-error');
+
+            if (pin === "Windhoek") {
+                isAdmin = true;
+                errorDiv.classList.add('hidden');
+                document.getElementById('admin-passcode').value = '';
+                closeAdminModal(); // Hides modal correctly
+                updateAdminUIMode();
+                showToast("Admin privileges unlocked successfully!", "success");
+            } else {
+                errorDiv.classList.remove('hidden');
+            }
+        };
+
+        window.toggleAdminState = function() {
+            if (isAdmin) {
+                isAdmin = false;
+                updateAdminUIMode();
+                showToast("Logged out of Admin Panel.", "info");
+            } else {
+                document.getElementById('admin-modal').classList.remove('hidden');
+                document.getElementById('admin-passcode').focus();
+            }
+        };
+
+        function updateAdminUIMode() {
+            const toggleBtn = document.getElementById('admin-toggle-btn');
+            const btnText = document.getElementById('admin-btn-text');
+            const lockIcon = document.getElementById('lock-icon');
+            const teamsPanel = document.getElementById('admin-teams-panel');
+            const addFixtureBtn = document.getElementById('admin-add-fixture-btn');
+            const generateFixturesBtn = document.getElementById('admin-generate-fixtures-btn');
+
+            if (isAdmin) {
+                btnText.textContent = "Exit Admin";
+                lockIcon.textContent = "🔓";
+                toggleBtn.classList.remove('bg-gray-800');
+                toggleBtn.classList.add('bg-emerald-500', 'text-slate-950', 'border-emerald-400');
+                
+                teamsPanel.classList.remove('hidden');
+                addFixtureBtn.classList.remove('hidden');
+                if (generateFixturesBtn) generateFixturesBtn.classList.remove('hidden');
+            } else {
+                btnText.textContent = "Admin Login";
+                lockIcon.textContent = "🔒";
+                toggleBtn.classList.add('bg-gray-800');
+                toggleBtn.classList.remove('bg-emerald-500', 'text-slate-950', 'border-emerald-400');
+                
+                teamsPanel.classList.add('hidden');
+                addFixtureBtn.classList.add('hidden');
+                if (generateFixturesBtn) generateFixturesBtn.classList.add('hidden');
+            }
+
+            calculateAndRefreshAllViews();
+        }
+
+        window.addNewTeam = async function() {
+            const nameInput = document.getElementById('new-team-name');
+            const name = nameInput.value.trim();
+
+            if (!name) {
+                showToast("Team name cannot be blank!", "warning");
+                return;
+            }
+
+            const newId = "T_" + Date.now().toString(36);
+            
+            leagueState.teams.push({
+                id: newId,
+                name: name,
+                p: 0, w: 0, d: 0, l: 0, gf: 0, ga: 0, gd: 0, pts: 0
+            });
+
+            nameInput.value = '';
+            await pushStateToCloud();
+            calculateAndRefreshAllViews();
+            showToast(`Registered new club: ${name}`, "success");
+        };
+
+        window.renameTeamPrompt = async function(teamId) {
+            let team = leagueState.teams.find(t => t.id === teamId);
+            if (!team) return;
+
+            const newName = prompt(`Enter new name for ${team.name}:`, team.name);
+            if (newName && newName.trim() !== '') {
+                team.name = newName.trim();
+                await pushStateToCloud();
+                calculateAndRefreshAllViews();
+                showToast(`Club renamed to: ${newName}`, "info");
+            }
+        };
+
+        window.addNewPlayer = async function() {
+            const nameInput = document.getElementById('new-player-name');
+            const teamSelect = document.getElementById('new-player-team');
+
+            const name = nameInput.value.trim();
+            const teamId = teamSelect.value;
+
+            if (!name || !teamId) {
+                showToast("Please provide both player name and select a team!", "warning");
+                return;
+            }
+
+            const newId = "P_" + Date.now().toString(36);
+            leagueState.players.push({
+                id: newId,
+                name: name,
+                teamId: teamId,
+                baselineGoals: 0,
+                baselineAssists: 0,
+                baselineOwnGoals: 0,
+                goals: 0,
+                assists: 0,
+                ownGoals: 0
+            });
+
+            nameInput.value = '';
+            teamSelect.value = '';
+            await pushStateToCloud();
+            calculateAndRefreshAllViews();
+            showToast(`Successfully registered ${name} to the team!`, "success");
+        };
+
+        window.updatePlayerStat = async function(playerId, statKey, amount) {
+            let player = leagueState.players.find(p => p.id === playerId);
+            if (player) {
+                const oldVal = player[statKey] || 0;
+                const newVal = Math.max(0, oldVal + amount);
+                player[statKey] = newVal;
+
+                // Highlight/Update the Live Audit Log inside the admin player manager view
+                const auditLog = document.getElementById('admin-stats-audit-log');
+                if (auditLog) {
+                    const friendlyLabel = statKey.includes('Goals') ? '⚽ Baseline Goals' : statKey.includes('Assists') ? '👟 Baseline Assists' : '⚠️ Baseline OG';
+                    const changeSymbol = amount > 0 ? '➕ Increased' : '➖ Decreased';
+                    const alertColor = amount > 0 ? 'text-emerald-400 border-emerald-500/30 bg-emerald-500/5' : 'text-amber-400 border-amber-500/30 bg-amber-500/5';
+                    
+                    auditLog.innerHTML = `
+                        <div class="p-3 border rounded-xl text-xs font-semibold flex items-center justify-between animate-in fade-in slide-in-from-top-1 duration-200 ${alertColor}">
+                            <span>📝 ${changeSymbol} ${player.name}'s ${friendlyLabel} from ${oldVal} to ${newVal}</span>
+                            <span class="text-[10px] uppercase opacity-75">Live Check</span>
+                        </div>
+                    `;
+                }
+
+                // Visual row flash feedback to prevent mistakes
+                const cardRow = document.getElementById(`player-card-${playerId}`);
+                if (cardRow) {
+                    cardRow.classList.add('bg-emerald-500/10', 'border-emerald-500/30');
+                    setTimeout(() => {
+                        cardRow.classList.remove('bg-emerald-500/10', 'border-emerald-500/30');
+                    }, 1000);
+                }
+
+                await pushStateToCloud();
+                calculateAndRefreshAllViews();
+            }
+        };
+
+        window.saveNewFixture = async function() {
+            const homeSelect = document.getElementById('fixture-home-select');
+            const awaySelect = document.getElementById('fixture-away-select');
+
+            const hId = homeSelect.value;
+            const aId = awaySelect.value;
+
+            if (hId === aId) {
+                showToast("A team cannot play against itself!", "warning");
+                return;
+            }
+
+            const newFixtureId = Date.now();
+            leagueState.fixtures.push({
+                id: newFixtureId,
+                homeId: hId,
+                awayId: aId,
+                gameWeek: 1,
+                day: "Friday",
+                slot: 1,
+                homeScore: null,
+                awayScore: null,
+                isPlayed: false,
+                events: []
+            });
+
+            closeFixtureModal();
+            await pushStateToCloud();
+            calculateAndRefreshAllViews();
+            showToast("Scheduled a new fixture!", "success");
+        };
+
+        function generateRoundRobin(teamsList) {
+            let list = [...teamsList];
+            
+            // Introduce a BYE slot if we have an odd number of teams to keep matchups balanced
+            const isOdd = list.length % 2 !== 0;
+            if (isOdd) {
+                list.push({ id: "BYE", name: "BYE" });
+            }
+            
+            const numTeams = list.length;
+            const matchesPerRound = numTeams / 2;
+            const targetRoundsCount = 6;
+            const allRoundsMatches = [];
+            
+            let roundsGenerated = 0;
+            while (roundsGenerated < targetRoundsCount) {
+                let cycleList = [...list];
+                const roundsInThisCycle = numTeams - 1;
+                
+                for (let r = 0; r < roundsInThisCycle; r++) {
+                    const roundMatches = [];
+                    for (let i = 0; i < matchesPerRound; i++) {
+                        const home = cycleList[i];
+                        const away = cycleList[numTeams - 1 - i];
+                        
+                        // Ignore mock matches scheduled against dummy BYE slots
+                        if (home.id !== "BYE" && away.id !== "BYE") {
+                            roundMatches.push({
+                                homeId: home.id,
+                                awayId: away.id
+                            });
+                        }
+                    }
+                    allRoundsMatches.push(roundMatches);
+                    roundsGenerated++;
+                    
+                    if (roundsGenerated >= targetRoundsCount) break;
+                    
+                    // Rotate circle algorithm (keeping index 0 fixed) to cycle opponents
+                    cycleList.splice(1, 0, cycleList.pop());
+                }
+            }
+            
+            // Assign rounds chronologically into the 6 weekend slots (3 Friday, 3 Saturday)
+            const finalFixtures = [];
+            const days = ["Friday", "Friday", "Friday", "Saturday", "Saturday", "Saturday"];
+            const slots = [1, 2, 3, 1, 2, 3];
+            
+            for (let r = 0; r < targetRoundsCount; r++) {
+                const roundMatches = allRoundsMatches[r] || [];
+                roundMatches.forEach((match, index) => {
+                    finalFixtures.push({
+                        id: Date.now() + Math.round(Math.random() * 10000000) + index + (r * 1000),
+                        gameWeek: 1, // Represents Weekend 1
+                        day: days[r],
+                        slot: slots[r],
+                        homeId: match.homeId,
+                        awayId: match.awayId,
+                        homeScore: null,
+                        awayScore: null,
+                        isPlayed: false,
+                        events: []
+                    });
+                });
+            }
+            
+            return finalFixtures;
+        }
+
+        window.triggerAutoGenerate = function() {
+            if (leagueState.teams.length < 2) {
+                showToast("You need at least 2 teams registered to generate a schedule!", "warning");
+                return;
+            }
+            openConfirmModal(
+                "Generate Weekend Schedule?",
+                "This will auto-generate a mathematically fair schedule where each team plays exactly 6 matches (3 on Friday, 3 on Saturday). It ensures you play against EVERY opponent once before any rematches occur. WARNING: This replaces current matches!",
+                async () => {
+                    const generated = generateRoundRobin(leagueState.teams);
+                    leagueState.fixtures = generated;
+                    await pushStateToCloud();
+                    calculateAndRefreshAllViews();
+                    showToast("New fair weekend schedule generated!", "success");
+                }
+            );
+        };
+
+        window.switchStatsTab = function(tabName) {
+            activeStatsTab = tabName;
+            
+            // Highlight active tab
+            document.getElementById('stat-tab-goals').className = "text-[11px] uppercase tracking-wider font-bold px-3 py-1.5 rounded-lg text-gray-400 hover:text-white cursor-pointer whitespace-nowrap";
+            document.getElementById('stat-tab-assists').className = "text-[11px] uppercase tracking-wider font-bold px-3 py-1.5 rounded-lg text-gray-400 hover:text-white cursor-pointer whitespace-nowrap";
+            document.getElementById('stat-tab-own-goals').className = "text-[11px] uppercase tracking-wider font-bold px-3 py-1.5 rounded-lg text-gray-400 hover:text-white cursor-pointer whitespace-nowrap";
+
+            const activeBtn = document.getElementById(`stat-tab-${tabName}`);
+            if (tabName === 'goals') {
+                activeBtn.className = "text-[11px] uppercase tracking-wider font-bold px-3 py-1.5 rounded-lg bg-amber-400/10 text-amber-400 border border-amber-400/20 cursor-pointer whitespace-nowrap";
+            } else if (tabName === 'assists') {
+                activeBtn.className = "text-[11px] uppercase tracking-wider font-bold px-3 py-1.5 rounded-lg bg-cyan-400/10 text-cyan-400 border border-cyan-400/20 cursor-pointer whitespace-nowrap";
+            } else {
+                activeBtn.className = "text-[11px] uppercase tracking-wider font-bold px-3 py-1.5 rounded-lg bg-rose-400/10 text-rose-400 border border-rose-400/20 cursor-pointer whitespace-nowrap";
+            }
+
+            renderStatsLeaderboardsUI();
+        };
+
+        window.switchAdminTab = function(tabName) {
+            activeAdminTab = tabName;
+
+            const tabTeams = document.getElementById('tab-btn-teams');
+            const tabPlayers = document.getElementById('tab-btn-players');
+            const viewTeams = document.getElementById('admin-tab-teams-view');
+            const viewPlayers = document.getElementById('admin-tab-players-view');
+
+            if (tabName === 'teams') {
+                tabTeams.className = "text-xs font-semibold px-3 py-1.5 rounded-md bg-emerald-500 text-slate-950 cursor-pointer";
+                tabPlayers.className = "text-xs font-semibold px-3 py-1.5 rounded-md text-gray-400 hover:text-white cursor-pointer";
+                viewTeams.classList.remove('hidden');
+                viewPlayers.classList.add('hidden');
+            } else {
+                tabTeams.className = "text-xs font-semibold px-3 py-1.5 rounded-md text-gray-400 hover:text-white cursor-pointer";
+                tabPlayers.className = "text-xs font-semibold px-3 py-1.5 rounded-md bg-emerald-500 text-slate-950 cursor-pointer";
+                viewTeams.classList.add('hidden');
+                viewPlayers.classList.remove('hidden');
+            }
+        };
+
+        window.setFixtureFilter = function(filter) {
+            fixtureFilter = filter;
+            
+            const btnAll = document.getElementById('filter-btn-all');
+            const btnPlayed = document.getElementById('filter-btn-played');
+            const btnUpcoming = document.getElementById('filter-btn-upcoming');
+
+            btnAll.className = "flex-1 sm:flex-none text-[10px] font-bold px-3 py-2 rounded-lg text-gray-400 bg-gray-900 hover:text-white transition-all cursor-pointer";
+            btnPlayed.className = "flex-1 sm:flex-none text-[10px] font-bold px-3 py-2 rounded-lg text-gray-400 bg-gray-900 hover:text-white transition-all cursor-pointer";
+            btnUpcoming.className = "flex-1 sm:flex-none text-[10px] font-bold px-3 py-2 rounded-lg text-gray-400 bg-gray-900 hover:text-white transition-all cursor-pointer";
+
+            const activeBtn = document.getElementById(`filter-btn-${filter}`);
+            if (activeBtn) {
+                activeBtn.className = "flex-1 sm:flex-none text-[10px] font-bold px-3 py-2 rounded-lg bg-cyan-500 text-slate-950 transition-all cursor-pointer";
+            }
+
+            renderFixturesUI();
+        };
+
+        window.filterAndRenderFixtures = function() {
+            fixtureSearchQuery = (document.getElementById('fixture-search-input').value || '').trim().toLowerCase();
+            renderFixturesUI();
+        };
+
+        window.triggerDeleteTeam = function(teamId) {
+            let team = leagueState.teams.find(t => t.id === teamId);
+            if (!team) return;
+
+            openConfirmModal(
+                `Delete ${team.name}?`,
+                "This action deletes the team, their registered players, and wipes their scores from all matches. Are you absolutely sure?",
+                async () => {
+                    leagueState.teams = leagueState.teams.filter(t => t.id !== teamId);
+                    leagueState.fixtures = leagueState.fixtures.filter(f => f.homeId !== teamId && f.awayId !== teamId);
+                    leagueState.players = leagueState.players.filter(p => p.teamId !== teamId);
+                    await pushStateToCloud();
+                    calculateAndRefreshAllViews();
+                    showToast(`Removed team: ${team.name}`, "info");
+                }
+            );
+        };
+
+        window.triggerDeletePlayer = function(playerId) {
+            let player = leagueState.players.find(p => p.id === playerId);
+            if (!player) return;
+
+            openConfirmModal(
+                `Delete player ${player.name}?`,
+                "This will remove the player completely from the league stats database. Continue?",
+                async () => {
+                    leagueState.players = leagueState.players.filter(p => p.id !== playerId);
+                    
+                    // Remove individual occurrences in matches events lists
+                    leagueState.fixtures.forEach(match => {
+                        if (match.events) {
+                            match.events = match.events.filter(ev => ev.playerId !== playerId);
+                        }
+                    });
+
+                    await pushStateToCloud();
+                    calculateAndRefreshAllViews();
+                    showToast(`Removed player: ${player.name}`, "info");
+                }
+            );
+        };
+
+        window.triggerDeleteFixture = function(matchId) {
+            openConfirmModal(
+                "Delete match fixture?",
+                "Are you sure you want to remove this match from schedule list?",
+                async () => {
+                    leagueState.fixtures = leagueState.fixtures.filter(f => f.id !== matchId);
+                    await pushStateToCloud();
+                    calculateAndRefreshAllViews();
+                    showToast("Fixture deleted.", "info");
+                }
+            );
+        };
+
+        function openConfirmModal(title, desc, onConfirm) {
+            document.getElementById('confirm-title').textContent = title;
+            document.getElementById('confirm-description').textContent = desc;
+            document.getElementById('custom-confirm-modal').classList.remove('hidden');
+            confirmationCallback = onConfirm;
+        }
+
+        document.getElementById('confirm-cancel-btn').addEventListener('click', () => {
+            document.getElementById('custom-confirm-modal').classList.add('hidden');
+            confirmationCallback = null;
+        });
+
+        document.getElementById('confirm-action-btn').addEventListener('click', async () => {
+            document.getElementById('custom-confirm-modal').classList.add('hidden');
+            if (confirmationCallback) {
+                await confirmationCallback();
+            }
+            confirmationCallback = null;
+        });
+
+        window.openAddFixtureModal = function() {
+            document.getElementById('fixture-modal').classList.remove('hidden');
+        };
+
+        window.closeFixtureModal = function() {
+            document.getElementById('fixture-modal').classList.add('hidden');
+        };
+
+        window.closeAdminModal = function() {
+            document.getElementById('admin-modal').classList.add('hidden'); // CHANGED: changed from remove to add to close successfully
+            document.getElementById('login-error').classList.add('hidden');
+        };
+
+        window.dismissToast = function() {
+            document.getElementById('toast-banner').classList.add('hidden');
+        };
+
+        function updateSyncStatus(connected, text) {
+            const dot = document.getElementById('status-dot');
+            const label = document.getElementById('status-text');
+            const wrapper = document.getElementById('sync-status');
+            if (!dot || !label || !wrapper) return;
+
+            wrapper.classList.remove('hidden');
+            label.textContent = text;
+
+            dot.className = "w-2.5 h-2.5 rounded-full";
+            if (text === "Synchronized" || text === "Cloud Connected") {
+                dot.className += " bg-emerald-400";
+            } else if (text === "Saving...") {
+                dot.className += " bg-cyan-400 animate-pulse";
+            } else {
+                dot.className += " bg-yellow-500 animate-pulse";
+            }
+        }
+
+        function showToast(msg, type = "info") {
+            const banner = document.getElementById('toast-banner');
+            const container = document.getElementById('toast-container');
+            const msgSpan = document.getElementById('toast-message');
+
+            msgSpan.textContent = msg;
+
+            container.className = "p-4 rounded-xl flex items-center justify-between text-sm ";
+            if (type === "success") {
+                container.classList.add("bg-emerald-500/10", "text-emerald-400", "border", "border-emerald-500/20");
+            } else if (type === "warning") {
+                container.classList.add("bg-yellow-500/10", "text-yellow-400", "border", "border-yellow-500/20");
+            } else if (type === "error") {
+                container.classList.add("bg-[#e11d48]/10", "text-[#f43f5e]", "border", "border-[#e11d48]/20");
+            } else {
+                container.classList.add("bg-[#0284c7]/10", "text-[#38bdf8]", "border", "border-[#0284c7]/20");
+            }
+
+            banner.classList.remove('hidden');
+            setTimeout(dismissToast, 6000);
+        }
+
+        // Setup admin passcode toggling
+        document.getElementById('admin-toggle-btn').addEventListener('click', window.toggleAdminState);
     </script>
 </body>
 </html>
